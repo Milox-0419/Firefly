@@ -6,10 +6,10 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "Milox",
+	title: "Milox's Blog",
 
 	// 站点副标题
-	subtitle: "Milox-0419",
+	subtitle: "欢迎来到我的博客，记录AI渗透、ACGN、编程等相关内容",
 
 	// 站点 URL
 	site_url: "https://milox-0419.com",
@@ -45,7 +45,7 @@ export const siteConfig: SiteConfig = {
 	// 网站Card样式配置
 	card: {
 		// 是否开启卡片边框和阴影，开启后让网站更有立体感
-		border: false,
+		border: true,
 		// 是否让卡片风格跟随主题色相
 		followTheme: false,
 	},
@@ -81,7 +81,7 @@ export const siteConfig: SiteConfig = {
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "Firefly",
+		title: "Milox's Blog",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中
@@ -223,7 +223,7 @@ export const siteConfig: SiteConfig = {
 		// Bilibili 配置
 		bilibili: {
 			// 你的 Bilibili 用户 UID
-			uid: "38932988",
+			uid: "3546871991634230",
 		},
 		// TMDB 配置（可选，需要翻墙）
 		// tmdb: {
