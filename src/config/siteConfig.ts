@@ -9,21 +9,21 @@ export const siteConfig: SiteConfig = {
 	title: "Milox's Blog",
 
 	// 站点副标题
-	subtitle: "欢迎来到我的博客，记录AI渗透、ACGN、编程等相关内容",
+	subtitle: "AI渗透，网安技术分享",
 
 	// 站点 URL
-	site_url: "https://milox-0419.com",
+	site_url: "https://milox.dpdns.org",
 
 	// 站点描述
 	description:
-		"这里是我的博客",
+		"欢迎来到我的博客！！！",
 
 	// 站点关键词
 	keywords: [
 		"Milox",
 		"Fuwari",
 		"Astro",
-		"ACGN",
+		"AI渗透",
 		"博客",
 		"技术博客",
 		"静态博客",
