@@ -24,7 +24,7 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "weixin",
 			icon: "fa7-brands:weixin",
-			url: "/images/Author-Card.png",
+			url: "/assets/images/Author-Card.png",
 			showName: false,
 		},
 		{
