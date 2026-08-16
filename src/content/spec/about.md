@@ -1,29 +1,19 @@
 # 关于我 / About Me
 
-你好！我是 **夏叶** ，一个在数字世界中默默无闻的一片叶子。
+你好，我是 **Milox** 👋
 
-## 🛠️ 关于本站
+我是一名初二学生，目前主要对 **网络安全** 和 **AI 渗透测试** 方向感兴趣。
+## 关于本站
+这个博客是我学习和成长的地方 —— 我会在这里记录自己在安全领域的学习笔记、实验过程和技术思考。
 
-这个网站使用 **Astro** 框架构建，采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 模板，Firefly 是基于 [Fuwari](https://github.com/saicaca/fuwari) 的二次开发。
+在我看来，网络安全是一个需要不断动手实践的领域。写博客不仅是为了分享，也是为了帮自己把问题理解得更透彻。
 
-**Firefly** 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
+欢迎同好交流，也欢迎前辈指教。
 
-
-**🖥️在线预览： [Firefly - Demo site](https://firefly.cuteleaf.cn/)**
-
-**🏠我的博客： [https://blog.cuteleaf.cn](https://blog.cuteleaf.cn/)**
-
-**📝Firefly使用文档： [https://docs-firefly.cuteleaf.cn](https://docs-firefly.cuteleaf.cn/)**
-
-**⭐Firefly开源地址：[https://github.com/CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)** 
-
-**⭐Fuwari开源地址：[https://github.com/saicaca/fuwari](https://github.com/saicaca/fuwari)**
-
-::github{repo="CuteLeaf/Firefly"}
-
-::github{repo="saicaca/fuwari"}
+📧 邮箱：[18095425411@163.com](mailto:18095425411@163.com)
+::github{repo="Milox-0419/Firefly"}
 
 ---
 
-*感谢你的来访！希望在这里能找到对你有用的内容！*
+***一个初中生的技术成长日志，感谢你的来访！***
 
