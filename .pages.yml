@@ -5,7 +5,8 @@ media:
 collections:
   - name: "posts"
     label: "文章"
-    path: "src/content/posts"
+    type: "collection"           # 这行是关键，之前漏掉了
+    folder: "src/content/posts"  # 用 folder 而不是 path
     fields:
       - { name: "title", label: "标题", widget: "string" }
       - { name: "date", label: "日期", widget: "datetime" }
