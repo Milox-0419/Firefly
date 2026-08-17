@@ -81,11 +81,11 @@ export const siteConfig: SiteConfig = {
 			alt: "a",
 		},
 		// 导航栏标题
-		title: "Milox's Blog",
+		title: "Milox",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
-		widthFull: false,
+		widthFull: true,
 		// 导航菜单对齐方式，left：左对齐，center：居中
-		menuAlign: "center",
+		menuAlign: "left",
 		// 导航栏图标和标题是否跟随主题色
 		followTheme: true,
 		// 导航栏是否固定在顶部并始终可见
