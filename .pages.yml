@@ -1,8 +1,8 @@
 media:
   - name: assets
     label: 站点资源
-    input: public/assets
-    output: /assets
+    input: src/content/posts/images
+    output: ./images
     categories: [image]
 
 content:
