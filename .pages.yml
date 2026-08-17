@@ -1,0 +1,14 @@
+media:
+  input: src/content/posts/images
+  output: ./images
+
+collections:
+  - name: "posts"
+    label: "文章"
+    path: "src/content/posts"
+    fields:
+      - { name: "title", label: "标题", widget: "string" }
+      - { name: "date", label: "日期", widget: "datetime" }
+      - { name: "description", label: "描述", widget: "text" }
+      - { name: "tags", label: "标签", widget: "list" }
+      - { name: "body", label: "正文", widget: "markdown" }
