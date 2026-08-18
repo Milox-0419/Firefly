@@ -45,7 +45,7 @@
 #navbar>div {
     background-color: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: var(--radius-large);
+    border-radius: 9999px;
     --navbar-surface-blur: 12px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
     /* 给下面的 ::before 当定位包含块与层叠上下文 */
@@ -99,7 +99,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
         --navbar-surface-blur: 12px !important;
         background: rgba(0, 0, 0, 0.3) !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-radius: var(--radius-large) !important;
+        border-radius: 9999px !important;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15) !important;
     }
 
@@ -109,7 +109,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
         --navbar-surface-blur: 12px !important;
         background: rgba(0, 0, 0, 0.3) !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-radius: var(--radius-large) !important;
+        border-radius: 9999px !important;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15) !important;
     }
 
@@ -119,7 +119,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
         --navbar-surface-blur: 12px !important;
         background: rgba(0, 0, 0, 0.3) !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-radius: var(--radius-large) !important;
+        border-radius: 9999px !important;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15) !important;
     }
 
@@ -144,7 +144,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
         --navbar-surface-blur: 12px !important;
         background: rgba(0, 0, 0, 0.3) !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-radius: var(--radius-large) !important;
+        border-radius: 9999px !important;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15) !important;
     }
 
@@ -154,7 +154,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
         --navbar-surface-blur: 12px !important;
         background: rgba(0, 0, 0, 0.3) !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-radius: var(--radius-large) !important;
+        border-radius: 9999px !important;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15) !important;
     }
 
@@ -164,7 +164,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
         --navbar-surface-blur: 12px !important;
         background: rgba(0, 0, 0, 0.3) !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-radius: var(--radius-large) !important;
+        border-radius: 9999px !important;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15) !important;
     }
 
@@ -254,7 +254,7 @@ body:has(#wallpaper-wrapper) #navbar[data-transparent-mode="semifull"]:not(.scro
  * ============================================ */
 @media (max-width: 767px) {
     #navbar>div {
-        border-radius: var(--radius-large) !important;
+        border-radius: 9999px !important;
     }
 }
 
