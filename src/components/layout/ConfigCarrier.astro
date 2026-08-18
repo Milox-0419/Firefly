@@ -1,11 +1,14 @@
 ---
 import { backgroundWallpaper, siteConfig } from "@/config";
+import { getEffectiveWallpaperMode } from "@/utils/layout-utils";
+
+const effectiveMode = getEffectiveWallpaperMode(Astro.url.pathname);
 ---
 
 <!-- 全局配置载体 -->
 <div
   id="config-carrier"
   data-hue={siteConfig.themeColor.hue}
-  data-wallpaper-mode={backgroundWallpaper.mode}
+  data-wallpaper-mode={effectiveMode}
 >
 </div>

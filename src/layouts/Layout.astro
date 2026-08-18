@@ -26,7 +26,7 @@ import {
 } from "@/constants/constants";
 import { defaultFavicons } from "@/constants/icon";
 import type { Favicon } from "@/types/config";
-import { isHomePage } from "@/utils/layout-utils";
+import { isHomePage, getEffectiveWallpaperMode } from "@/utils/layout-utils";
 import { url } from "@/utils/url-utils";
 
 import "@/styles/main.css";
@@ -50,6 +50,12 @@ let { title, description, lang, setOGTypeArticle, postSlug } = Astro.props;
 // so use Swup hooks instead to change the height immediately when a link is clicked
 const isHomePageCheck = isHomePage(Astro.url.pathname);
 
+// 首页与文章页壁纸模式支持
+const homeWallpaperMode = backgroundWallpaper.mode;
+const postWallpaperMode = backgroundWallpaper.postMode || homeWallpaperMode;
+const effectiveWallpaperMode = getEffectiveWallpaperMode(Astro.url.pathname);
+const isWallpaperPerpage = homeWallpaperMode !== postWallpaperMode;
+
 // defines global css variables
 // why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
 const configHue = siteConfig.themeColor.hue;
@@ -61,7 +67,7 @@ const navbarTransparentMode =
 const shouldShowTopHighlight =
 	navbarTransparentMode === "full" || navbarTransparentMode === "semifull";
 
-const enableBanner = backgroundWallpaper.mode === "banner";
+const enableBanner = effectiveWallpaperMode === "banner";
 
 // 子菜单 / 浮动面板的毛玻璃模糊度：跟随 navbar.blur，但不受壁纸模式影响，
 // 且带一个最小值 —— 导航栏可以用 blur: 0 关掉毛玻璃，面板则始终保留毛玻璃。
@@ -102,7 +108,7 @@ const siteLang = lang.replace("_", "-");
 ---
 
 <!doctype html>
-<html lang={siteLang} class="bg-(--page-bg) text-[14px] md:text-[16px]" data-wallpaper-mode={backgroundWallpaper.mode}>
+<html lang={siteLang} class="bg-(--page-bg) text-[14px] md:text-[16px]" data-wallpaper-mode={effectiveWallpaperMode}>
   <head>
     <meta charset="UTF-8" />
     <style is:inline>
@@ -258,7 +264,10 @@ const siteLang = lang.replace("_", "-");
         PAGE_WIDTH,
         configHue,
         defaultMode: siteConfig.themeColor.defaultMode ?? "light",
-        defaultWallpaperMode: backgroundWallpaper.mode,
+        defaultWallpaperMode: effectiveWallpaperMode,
+        homeWallpaperMode,
+        postWallpaperMode,
+        isWallpaperPerpage,
         isWallpaperSwitchable:
           displaySettingsConfig.wallpaperModeSwitchable,
         darkTheme: expressiveCodeConfig.darkTheme,
@@ -767,7 +776,7 @@ const siteLang = lang.replace("_", "-");
     BANNER_HEIGHT_EXTEND,
     // MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
   } from "@/constants/constants";
-  import { backgroundWallpaper, expressiveCodeConfig, siteConfig } from "@/config";
+  import { backgroundWallpaper, displaySettingsConfig, expressiveCodeConfig, siteConfig } from "@/config";
   import { initializeFloatingPanels } from "@/utils/floating-panel-utils";
 
   /* Preload fonts */
@@ -816,6 +825,12 @@ function disableAnimation() {
 
   const bannerEnabled = !!document.getElementById("wallpaper-wrapper");
   const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
+
+  // 首页/文章页壁纸模式支持
+  const homeWallpaperMode = backgroundWallpaper.mode;
+  const postWallpaperMode = backgroundWallpaper.postMode || homeWallpaperMode;
+  const isWallpaperPerpage = homeWallpaperMode !== postWallpaperMode;
+  const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 
   initializeFloatingPanels();
 
@@ -999,6 +1014,20 @@ function disableAnimation() {
     });
     window.swup.hooks.on("content:replace", () => {
       initializeFloatingPanels();
+
+      // 首页/文章页壁纸模式自动切换
+      if (isWallpaperPerpage) {
+        const isHomeNav = pathsEqual(window.location.pathname, url("/"));
+        const targetMode = isHomeNav ? homeWallpaperMode : postWallpaperMode;
+        const currentModeNav = document.documentElement.getAttribute("data-wallpaper-mode");
+        if (targetMode !== currentModeNav) {
+          // 仅在用户未手动选择模式时自动切换
+          if (!isWallpaperSwitchable || !localStorage.getItem("wallpaperMode")) {
+            applyWallpaperModeToDocument(targetMode, false);
+          }
+        }
+      }
+
       const isHome = pathsEqual(window.location.pathname, url("/"));
       const currentMode = document.documentElement.getAttribute("data-wallpaper-mode");
       const isMobileForBanner = window.innerWidth < 1024;
@@ -1694,7 +1723,7 @@ function disableAnimation() {
   }
 
   // Initialize wallpaper mode
-  import { initWallpaperMode, initThemeListener } from "@/utils/setting-utils";
+  import { initWallpaperMode, initThemeListener, applyWallpaperModeToDocument } from "@/utils/setting-utils";
   import { initIconLoader } from "@/utils/icon-loader";
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {

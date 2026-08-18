@@ -79,6 +79,13 @@ export const isHomePage = (pathname: string): boolean => {
 	return false;
 };
 
+// 获取当前页面有效的壁纸模式（首页用 mode，非首页用 postMode）
+export const getEffectiveWallpaperMode = (pathname: string): string => {
+	const homeMode = backgroundWallpaper.mode;
+	const postMode = backgroundWallpaper.postMode || homeMode;
+	return isHomePage(pathname) ? homeMode : postMode;
+};
+
 // 获取横幅偏移量
 export const getBannerOffset = (position = "center"): string => {
 	const bannerOffsetByPosition = {

@@ -52,6 +52,7 @@ import {
 	siteConfig,
 } from "@/config";
 import type { WALLPAPER_MODE } from "@/types/config";
+import { getEffectiveWallpaperMode } from "@/utils/layout-utils";
 
 type OverlaySliderItem = {
 	key: "opacity" | "blur" | "cardOpacity";
@@ -70,8 +71,9 @@ type TabKey = "appearance" | "wallpaper" | "effects";
 
 let hue = $state(getHue());
 const defaultHue = getDefaultHue();
-let wallpaperMode: WALLPAPER_MODE = $state(backgroundWallpaper.mode);
-const defaultWallpaperMode = backgroundWallpaper.mode;
+const effectiveDefaultMode = getEffectiveWallpaperMode(typeof window !== "undefined" ? window.location.pathname : "/");
+let wallpaperMode: WALLPAPER_MODE = $state(effectiveDefaultMode as WALLPAPER_MODE);
+const defaultWallpaperMode = effectiveDefaultMode;
 let currentLayout: "list" | "grid" = $state("list");
 const defaultLayout = siteConfig.postListLayout.defaultMode;
 const mobileDefaultLayout =

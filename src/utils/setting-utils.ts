@@ -17,7 +17,7 @@ import {
 	sakuraConfig,
 	siteConfig,
 } from "../config";
-import { isHomePage as checkIsHomePage } from "./layout-utils";
+import { isHomePage as checkIsHomePage, getEffectiveWallpaperMode } from "./layout-utils";
 
 // Declare global functions
 declare global {
@@ -286,7 +286,7 @@ export function applyWallpaperModeToDocument(
 	const currentMode =
 		(document.documentElement.getAttribute(
 			"data-wallpaper-mode",
-		) as WALLPAPER_MODE) || backgroundWallpaper.mode;
+		) as WALLPAPER_MODE) || (getEffectiveWallpaperMode(window.location.pathname) as WALLPAPER_MODE);
 
 	// 检查是否允许切换壁纸模式
 	const isSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
@@ -866,18 +866,18 @@ export function getStoredWallpaperMode(): WALLPAPER_MODE {
 		typeof localStorage === "undefined" ||
 		typeof localStorage.getItem !== "function"
 	) {
-		return backgroundWallpaper.mode;
+		return getEffectiveWallpaperMode(window.location.pathname) as WALLPAPER_MODE;
 	}
 
 	const isSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 	if (!isSwitchable) {
 		localStorage.removeItem("wallpaperMode");
-		return backgroundWallpaper.mode;
+		return getEffectiveWallpaperMode(window.location.pathname) as WALLPAPER_MODE;
 	}
 
 	return (
 		(localStorage.getItem("wallpaperMode") as WALLPAPER_MODE) ||
-		backgroundWallpaper.mode
+		(getEffectiveWallpaperMode(window.location.pathname) as WALLPAPER_MODE)
 	);
 }
 

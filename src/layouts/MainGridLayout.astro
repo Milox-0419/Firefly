@@ -29,7 +29,7 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { getImageQuality } from "@/utils/image-utils";
-import { getBackgroundImages, isHomePage } from "@/utils/layout-utils";
+import { getBackgroundImages, isHomePage, getEffectiveWallpaperMode } from "@/utils/layout-utils";
 import {
 	generateGridClasses,
 	generateMainContentClasses,
@@ -79,11 +79,19 @@ const {
 } = Astro.props;
 
 // 检查背景壁纸模式和是否允许切换
-const isBannerMode = backgroundWallpaper.mode === "banner";
-const isFullscreenMode = backgroundWallpaper.mode === "fullscreen";
-const isOverlayMode = backgroundWallpaper.mode === "overlay";
-const isBackgroundEnabled = backgroundWallpaper.mode !== "none";
+const homeWallpaperMode = backgroundWallpaper.mode;
+const postWallpaperMode = backgroundWallpaper.postMode || homeWallpaperMode;
+const effectiveWallpaperMode = getEffectiveWallpaperMode(Astro.url.pathname);
+const isBannerMode = effectiveWallpaperMode === "banner";
+const isFullscreenMode = effectiveWallpaperMode === "fullscreen";
+const isOverlayMode = effectiveWallpaperMode === "overlay";
+const isBackgroundEnabled = effectiveWallpaperMode !== "none";
 const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
+
+// 壁纸是否需要渲染（首页模式或文章页模式任一需要壁纸即渲染）
+const homeNeedsWallpaper = homeWallpaperMode !== "none";
+const postNeedsWallpaper = postWallpaperMode !== "none";
+const shouldRenderWallpaper = homeNeedsWallpaper || postNeedsWallpaper || isWallpaperSwitchable;
 
 // 检查是否启用水波纹动画效果
 const wavesConfig = backgroundWallpaper.common?.waves?.enable;
@@ -334,8 +342,8 @@ const hasMultipleImages =
     </div>
 </div>
 
-<!-- Wallpaper - 如果允许切换则始终渲染，否则只渲染当前模式 -->
-{(isWallpaperSwitchable || isBannerMode || isFullscreenMode || isOverlayMode) && (
+<!-- Wallpaper - 如果允许切换、首页模式或文章页模式任一需要壁纸则渲染 -->
+{shouldRenderWallpaper && (
 <div id="wallpaper-wrapper" class:list={[
 	`absolute z-10 w-full transition duration-700 overflow-hidden ${mobileNonHomeBannerClass}`,
 	(isOverlayMode && !isWallpaperSwitchable) ? 'wallpaper-overlay' : '',
@@ -824,7 +832,7 @@ const hasMultipleImages =
 )}
 
 {/* 当壁纸未渲染时，添加空的 Swup 占位容器，避免 Swup 找不到容器而回退为整页加载 */}
-{!(isWallpaperSwitchable || isBannerMode || isFullscreenMode || isOverlayMode) && (
+{!(shouldRenderWallpaper) && (
 <>
     <div id="banner-overlay-container" class="hidden"></div>
     <div id="banner-dim-container" class="hidden"></div>
