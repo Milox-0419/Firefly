@@ -7,6 +7,7 @@ import CodeGroupManager from "@components/features/CodeGroupManager.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
 import FontSetup from "@components/features/FontSetup.astro";
 import MusicManager from "@components/features/MusicManager.astro";
+import ParticleBackground from "@components/features/ParticleBackground.astro";
 import SakuraEffect from "@components/features/SakuraEffect.astro";
 import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
 
@@ -622,6 +623,9 @@ const siteLang = lang.replace("_", "-");
 
     <!-- Sakura Effect -->
     <SakuraEffect />
+
+    <!-- 黑客风动态粒子背景（全局生效，层级在内容与导航栏之间） -->
+    <ParticleBackground />
 
     <!-- Fancybox Manager -->
     <FancyboxManager />
