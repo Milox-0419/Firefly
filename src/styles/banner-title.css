@@ -9,54 +9,52 @@
     font-size: min(var(--banner-title-size, 3rem), 10vw);
     /* 独立字体设置，通过 fontConfig.bannerTitleFont 配置 */
     font-family: var(--font-banner-title, inherit);
-    /* 入场动画：clip-path 从左向右擦除显现 + 滑入 + 水平拉伸
-       （参考 fqzlr.com 主标题的 GSAP 入场效果，用纯 CSS 复刻） */
-    animation:
-        banner-title-wipe 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both,
-        banner-title-shimmer 5s linear 2.5s infinite;
-    transform-origin: 0% 50%;
+    /* 入场动画：柔和淡入 + 轻微上浮 */
+    animation: banner-title-fade-in 1s ease-out 0.2s both;
 }
 
-/* 持续流光：白色高光带周期性扫过文字表面
-   仅当支持文字裁剪时才设置透明填充，避免旧浏览器文字不可见 */
+/* 渐变流光：彩色光带在文字上持续缓慢流动
+   仅当支持文字裁剪时才启用，避免旧浏览器文字不可见 */
 @supports (-webkit-text-fill-color: transparent) and
     ((-webkit-background-clip: text) or (background-clip: text)) {
     .banner-title {
         background-image: linear-gradient(
-            110deg,
-            #fff 44%,
-            rgba(255, 255, 255, 0.45) 50%,
-            #fff 56%
+            100deg,
+            #ffffff 0%,
+            #a5d8ff 20%,
+            #d0bfff 38%,
+            #ffc9c9 52%,
+            #a5d8ff 68%,
+            #ffffff 100%
         );
-        background-size: 250% 100%;
+        background-size: 200% 100%;
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
         color: transparent;
+        animation:
+            banner-title-fade-in 1s ease-out 0.2s both,
+            banner-title-flow 9s linear infinite;
     }
 }
 
-@keyframes banner-title-wipe {
+@keyframes banner-title-fade-in {
     from {
         opacity: 0;
-        /* 上下放宽到 -50%，避免裁剪 text-shadow 辉光 */
-        clip-path: inset(-50% 100% -50% -5%);
-        transform: translateX(-2.5rem) scaleX(0.8);
+        transform: translateY(1rem);
     }
     to {
         opacity: 1;
-        clip-path: inset(-50% -5% -50% -5%);
-        transform: translateX(0) scaleX(1);
+        transform: translateY(0);
     }
 }
 
-@keyframes banner-title-shimmer {
-    0% {
-        background-position: 120% 0;
+@keyframes banner-title-flow {
+    from {
+        background-position: 0% 0;
     }
-    35%,
-    100% {
-        background-position: -120% 0;
+    to {
+        background-position: -200% 0;
     }
 }
 
