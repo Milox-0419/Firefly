@@ -477,11 +477,8 @@ function showBannerMode(animate = false) {
 			backgroundWallpaper.common?.navbar?.transparentMode || "semi";
 		navbar.setAttribute("data-transparent-mode", transparentMode);
 
-		// 重新初始化半透明模式滚动检测（如果需要）
-		if (
-			transparentMode === "semifull" &&
-			typeof window.initSemifullScrollDetection === "function"
-		) {
+		// 重新初始化导航栏滚动检测（logo 合并动画需要在所有模式下运行）
+		if (typeof window.initSemifullScrollDetection === "function") {
 			window.initSemifullScrollDetection();
 		}
 	}
@@ -553,10 +550,8 @@ function showFullscreenMode(animate = false) {
 			backgroundWallpaper.common?.navbar?.transparentMode || "semi";
 		navbar.setAttribute("data-transparent-mode", transparentMode);
 
-		if (
-			transparentMode === "semifull" &&
-			typeof window.initSemifullScrollDetection === "function"
-		) {
+		// 重新初始化导航栏滚动检测（logo 合并动画需要在所有模式下运行）
+		if (typeof window.initSemifullScrollDetection === "function") {
 			window.initSemifullScrollDetection();
 		}
 	}
@@ -659,18 +654,9 @@ function updateNavbarTransparency(mode: WALLPAPER_MODE) {
 	// 移除scrolled类
 	navbar.classList.remove("scrolled");
 
-	// 滚动检测功能
-	if (
-		transparentMode === "semifull" &&
-		(mode === WALLPAPER_BANNER || mode === WALLPAPER_FULLSCREEN) &&
-		typeof window.initSemifullScrollDetection === "function"
-	) {
-		// 在Banner和全屏壁纸模式的semifull下启用滚动检测
+	// 滚动检测功能（logo 合并动画需要在所有壁纸模式下运行）
+	if (typeof window.initSemifullScrollDetection === "function") {
 		window.initSemifullScrollDetection();
-	} else if (window.semifullScrollHandler) {
-		// 移除滚动监听器
-		window.removeEventListener("scroll", window.semifullScrollHandler);
-		delete window.semifullScrollHandler;
 	}
 }
 

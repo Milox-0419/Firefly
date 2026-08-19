@@ -144,7 +144,7 @@ const logoVariants = await Promise.all(
         "overflow-visible! h-18 px-4"
     ]}>
         <div class="mx-auto h-full w-full max-w-(--page-width) grid grid-cols-[auto_minmax(0,1fr)_auto] items-center">
-            <a href={url('/')} class="btn-plain scale-animation rounded-full h-13 px-3 md:px-5 font-bold active:scale-95">
+            <a href={url('/')} id="navbar-brand" class="btn-plain scale-animation rounded-full h-13 px-3 md:px-5 font-bold active:scale-95">
                 <div class:list={[
                     "flex flex-row items-center text-md",
                     siteConfig.navbar.followTheme ? "text-(--primary)" : "dark:text-white text-black"
@@ -331,15 +331,28 @@ function loadButtonScript() {
 
 loadButtonScript();
 
-// 为semifull模式添加滚动检测逻辑
+// 测量 Logo 宽度，写入 --brand-space（桌面端 Logo 分离/合并动画用）
+function updateBrandSpace() {
+    const navbar = document.getElementById('navbar');
+    const brand = document.getElementById('navbar-brand');
+    if (!navbar || !brand) return;
+    navbar.style.setProperty('--brand-space', `${brand.offsetWidth + 16}px`);
+}
+
+window.addEventListener('resize', updateBrandSpace);
+if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(updateBrandSpace);
+}
+
+// 导航栏滚动检测（滚动后添加 .scrolled，供 semifull 背景加深 + Logo 合并动画使用）
 function initSemifullScrollDetection() {
     const navbar = document.getElementById('navbar');
     if (!navbar) return;
 
-    const transparentMode = navbar.getAttribute('data-transparent-mode');
-    if (transparentMode !== 'semifull') return;
+    // 重新计算 Logo 分离间距
+    updateBrandSpace();
 
-    // 无论首页/非首页，semifull 都由滚动位置决定是否进入 scrolled 状态
+    // 无论首页/非首页，都由滚动位置决定是否进入 scrolled 状态
     // 先移除之前的滚动监听器，避免重复绑定
     if (window.semifullScrollHandler) {
         window.removeEventListener('scroll', window.semifullScrollHandler as () => void);

@@ -370,6 +370,39 @@ body.wallpaper-transparent #navbar-wrapper #navbar[data-full-width="true"] > div
 }
 
 /* ============================================
+ * 桌面端(≥1024px): Logo 和标题与导航栏分离/合并
+ * 初始状态: logo 浮动在导航栏胶囊左侧（同一水平线）
+ * 滚动后(.scrolled): 导航栏向左扩展，logo 向右滑动合并到导航栏左内侧，保持可见
+ * --brand-space 由 Navbar.astro 脚本根据 logo 实际宽度写入
+ * ============================================ */
+@media (min-width: 1024px) {
+    #navbar {
+        padding-left: var(--brand-space, 0px);
+        transition: padding-left 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #navbar.scrolled {
+        padding-left: 0;
+    }
+
+    /* logo 脱离 grid 布局，绝对定位在胶囊左侧外部 */
+    #navbar-brand {
+        position: absolute;
+        left: calc(-1 * var(--brand-space, 0px));
+        top: 50%;
+        transform: translateY(-50%);
+        transition: left 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        z-index: 2;
+        white-space: nowrap;
+    }
+
+    /* 滚动后 logo 滑入导航栏左内侧（胶囊 px-4 内边距位置） */
+    #navbar.scrolled #navbar-brand {
+        left: 1rem;
+    }
+}
+
+/* ============================================
  * 小于1280px时隐藏导航栏菜单图标
  * ============================================ */
 @media (max-width: 1279px) {
