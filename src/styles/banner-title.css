@@ -9,6 +9,55 @@
     font-size: min(var(--banner-title-size, 3rem), 10vw);
     /* 独立字体设置，通过 fontConfig.bannerTitleFont 配置 */
     font-family: var(--font-banner-title, inherit);
+    /* 入场动画：clip-path 从左向右擦除显现 + 滑入 + 水平拉伸
+       （参考 fqzlr.com 主标题的 GSAP 入场效果，用纯 CSS 复刻） */
+    animation:
+        banner-title-wipe 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both,
+        banner-title-shimmer 5s linear 2.5s infinite;
+    transform-origin: 0% 50%;
+}
+
+/* 持续流光：白色高光带周期性扫过文字表面
+   仅当支持文字裁剪时才设置透明填充，避免旧浏览器文字不可见 */
+@supports (-webkit-text-fill-color: transparent) and
+    ((-webkit-background-clip: text) or (background-clip: text)) {
+    .banner-title {
+        background-image: linear-gradient(
+            110deg,
+            #fff 44%,
+            rgba(255, 255, 255, 0.45) 50%,
+            #fff 56%
+        );
+        background-size: 250% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+    }
+}
+
+@keyframes banner-title-wipe {
+    from {
+        opacity: 0;
+        /* 上下放宽到 -50%，避免裁剪 text-shadow 辉光 */
+        clip-path: inset(-50% 100% -50% -5%);
+        transform: translateX(-2.5rem) scaleX(0.8);
+    }
+    to {
+        opacity: 1;
+        clip-path: inset(-50% -5% -50% -5%);
+        transform: translateX(0) scaleX(1);
+    }
+}
+
+@keyframes banner-title-shimmer {
+    0% {
+        background-position: 120% 0;
+    }
+    35%,
+    100% {
+        background-position: -120% 0;
+    }
 }
 
 .banner-subtitle {
