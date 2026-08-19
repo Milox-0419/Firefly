@@ -376,29 +376,24 @@ body.wallpaper-transparent #navbar-wrapper #navbar[data-full-width="true"] > div
  * --brand-space 由 Navbar.astro 脚本根据 logo 实际宽度写入
  * ============================================ */
 @media (min-width: 1024px) {
+    /* 静态预留 logo 分离空间（不参与动画，避免重排卡顿） */
     #navbar {
         padding-left: var(--brand-space, 0px);
-        transition: padding-left 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    #navbar.scrolled {
-        padding-left: 0;
-    }
-
-    /* logo 脱离 grid 布局，绝对定位在胶囊左侧外部 */
+    /* logo 保留在 grid 布局中，用 transform 平移到胶囊左侧外部
+       transform 由 GPU 合成，不触发布局/毛玻璃重绘，动画流畅 */
     #navbar-brand {
-        position: absolute;
-        left: calc(-1 * var(--brand-space, 0px));
-        top: 50%;
-        transform: translateY(-50%);
-        transition: left 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        transform: translateX(calc(-100% - 1rem));
+        transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: transform;
         z-index: 2;
         white-space: nowrap;
     }
 
-    /* 滚动后 logo 滑入导航栏左内侧（胶囊 px-4 内边距位置） */
+    /* 滚动后 logo 滑回原位，与导航栏合并（保持可见） */
     #navbar.scrolled #navbar-brand {
-        left: 1rem;
+        transform: translateX(0);
     }
 }
 
