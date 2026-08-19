@@ -153,7 +153,7 @@ $: if (initialized && (keyword || keyword === "")) {
 
 <!-- search toggle btn (all screen sizes) -->
 <button on:click={togglePanel} aria-label="Search Panel" aria-controls="search-panel" aria-expanded="false" id="search-switch"
-		class="btn-plain scale-animation rounded-lg w-9 h-9 md:w-11 md:h-11 active:scale-90">
+		class="btn-plain scale-animation rounded-full w-9 h-9 md:w-11 md:h-11 active:scale-90">
     <Icon icon="material-symbols:search" class="text-[1.25rem]"></Icon>
 </button>
 
