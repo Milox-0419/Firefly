@@ -1,7 +1,8 @@
 ---
 // 侧边栏卡片滚动入场动画
-// 卡片进入视口时从左向右滑入，按卡片序号依次延迟出现（逐个登场）
-// 首页全宽卡片模式（body.home-fullwidth-cards）：卡片拉伸成横条占满页宽，从上到下堆叠
+// 卡片进入视口时上下交替滑入：奇数序号卡片从底部向上滑入，偶数序号从顶部向下滑入
+// （方向类 sidebar-reveal-up/down 由 SideBar.astro 按卡片序号奇偶赋予）
+// 卡片保持侧边栏纵向堆叠布局，内部图片维持原有纵横比
 // 仅桌面/平板端（>=768px）生效，移动端底部组件不受影响；尊重“减弱动态效果”偏好
 ---
 
@@ -9,34 +10,26 @@
 	@media (min-width: 768px) {
 		.sidebar-reveal {
 			opacity: 0;
-			transform: translateX(-3rem);
 			will-change: transform, opacity;
 		}
+		/* 从底部向上滑入 */
+		.sidebar-reveal.sidebar-reveal-up {
+			transform: translateY(2.5rem);
+		}
+		/* 从顶部向下滑入 */
+		.sidebar-reveal.sidebar-reveal-down {
+			transform: translateY(-2.5rem);
+		}
 		.sidebar-reveal.is-revealed {
-			/* --reveal-delay 由 SideBar.astro 按卡片序号递增赋值，实现依次出现 */
-			animation: sidebar-reveal-in 0.6s cubic-bezier(0.22, 0.61, 0.36, 1)
-				var(--reveal-delay, 0ms) forwards;
-		}
-
-		/* 首页全宽卡片模式：网格单列，子元素逐个占满整行；
-		   特异性高于 Tailwind 的列定位与宽度限制类 */
-		body.home-fullwidth-cards #main-grid > * {
-			grid-column: 1 / -1;
-			grid-row: auto;
-		}
-		body.home-fullwidth-cards #left-sidebar {
-			max-width: none;
-		}
-		/* 全宽横条不再需要粘性跟随，避免整组卡片钉在顶部遮挡视口 */
-		body.home-fullwidth-cards #left-sidebar-sticky {
-			position: static;
+			animation: sidebar-reveal-in 0.55s cubic-bezier(0.22, 0.61, 0.36, 1)
+				forwards;
 		}
 	}
 
 	@keyframes sidebar-reveal-in {
 		to {
 			opacity: 1;
-			transform: translateX(0);
+			transform: translateY(0);
 		}
 	}
 
@@ -83,7 +76,12 @@
 			if (!target.classList?.contains("is-revealed")) return;
 			target.style.opacity = "1";
 			target.style.transform = "none";
-			target.classList.remove("is-revealed", "sidebar-reveal");
+			target.classList.remove(
+				"is-revealed",
+				"sidebar-reveal",
+				"sidebar-reveal-up",
+				"sidebar-reveal-down",
+			);
 			observer.unobserve(target);
 		});
 

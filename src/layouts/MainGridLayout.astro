@@ -248,9 +248,7 @@ const updatedGridConfig: ResponsiveSidebarConfig = {
 	tabletSidebar: effectiveTabletSidebar,
 };
 
-const { gridCols: baseGridCols } = generateGridClasses(updatedGridConfig);
-// 首页隐藏文章列表时改为单列网格，侧边栏卡片拉伸成横条占满页宽（子元素定位由 CSS 覆盖）
-const gridCols = homePostListHidden ? "grid-cols-1" : baseGridCols;
+const { gridCols } = generateGridClasses(updatedGridConfig);
 const sidebarClass = generateSidebarClasses(updatedGridConfig);
 const rightSidebarClass =
 	effectiveIsBothSidebars || sidebarLayoutConfig.position === "right"
@@ -323,13 +321,6 @@ const hasMultipleImages =
 {shouldEnableTransparency && (
 	<script>
 		document.body.classList.add('wallpaper-transparent');
-	</script>
-)}
-
-<!-- 首页全宽卡片模式：侧边栏卡片拉伸为全宽横条从上到下堆叠（样式见 SidebarReveal.astro） -->
-{homePostListHidden && (
-	<script>
-		document.body.classList.add('home-fullwidth-cards');
 	</script>
 )}
 
