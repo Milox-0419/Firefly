@@ -81,6 +81,25 @@ export const fontsList: FontDefinition[] = [
 		},
 		fallbacks: ["sans-serif"],
 	},
+	// Bruks Display：工业风展示字体（Tom Robin Karlsson，免费商用）
+	// 仅用于主页横幅主标题，woff2 优先、otf 兜底
+	{
+		name: "Bruks Display",
+		cssVariable: "--font-bruks-display",
+		provider: "local",
+		display: "swap",
+		options: {
+			variants: [
+				{
+					src: [
+						"./public/assets/fonts/Bruks-Display.woff2",
+						"./public/assets/fonts/Bruks-Display.otf",
+					],
+				},
+			],
+		},
+		fallbacks: ["Impact", "Arial Black", "sans-serif"],
+	},
 ];
 
 // ─── 字体选择与区域覆盖 ─────────────────────────────────────
@@ -94,7 +113,7 @@ export const fontConfig: FontSelectionConfig = {
 	// 各区域独立字体设置（填写上方 fonts 中的 cssVariable，留空则使用全局 selected 字体）
 	// 例如：bannerTitleFont: "--font-inter", 表示主页横幅主标题使用 Inter 字体
 	// 主页横幅主标题字体
-	bannerTitleFont: "--font-zen-maru-gothic",
+	bannerTitleFont: "--font-bruks-display",
 	// 主页横幅副标题字体
 	bannerSubtitleFont: "--font-inter",
 	// 导航栏标题字体
