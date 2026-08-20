@@ -6,6 +6,7 @@ import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
 import CodeGroupManager from "@components/features/CodeGroupManager.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
 import FontSetup from "@components/features/FontSetup.astro";
+import MouseEffects from "@components/features/MouseEffects.astro";
 import MusicManager from "@components/features/MusicManager.astro";
 import SakuraEffect from "@components/features/SakuraEffect.astro";
 import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
@@ -622,6 +623,9 @@ const siteLang = lang.replace("_", "-");
 
     <!-- Sakura Effect -->
     <SakuraEffect />
+
+    <!-- 鼠标交互特效（拖尾/点击波纹/自定义光标，仅桌面端启用） -->
+    <MouseEffects />
 
     <!-- Fancybox Manager -->
     <FancyboxManager />

@@ -131,6 +131,9 @@ importers:
       mdast-util-to-string:
         specifier: ^4.0.0
         version: 4.0.0
+      mouse-animations:
+        specifier: ^1.1.0
+        version: 1.1.0
       pagefind:
         specifier: ^1.5.2
         version: 1.5.2
@@ -4252,6 +4255,15 @@ packages:
 
   morphdom@2.7.8:
     resolution: {integrity: sha512-D/fR4xgGUyVRbdMGU6Nejea1RFzYxYtyurG4Fbv2Fi/daKlWKuXGLOdXtl+3eIwL110cI2hz1ZojGICjjFLgTg==}
+
+  mouse-animations@1.1.0:
+    resolution: {integrity: sha512-dRKCPEymh38BIZd21ugJucjfTdeBO0opIKi5mmtSxgGiUkHVMKZAS3YOg9Ja82LYJvhJvJOiu11fhTjNdxIxYg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      jquery: '>=3.0.0'
+    peerDependenciesMeta:
+      jquery:
+        optional: true
 
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -10802,6 +10814,8 @@ snapshots:
       ufo: 1.6.4
 
   morphdom@2.7.8: {}
+
+  mouse-animations@1.1.0: {}
 
   mri@1.2.0: {}
 

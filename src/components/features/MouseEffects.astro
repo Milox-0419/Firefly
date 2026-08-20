@@ -1,0 +1,59 @@
+---
+// 鼠标交互特效（mouse-animations，零依赖 <5KB gzip）
+// - Trail：紫色光点拖尾
+// - Ripple：点击半透明波纹
+// - CustomCursor：紫色圆点 + 外圈替换系统光标
+// 仅在精确指针设备（桌面端）启用，触屏/手机自动跳过；尊重"减弱动态效果"偏好
+// 效果绑定在 window/document 上，Swup 页面切换后持续生效，无需重新初始化
+---
+
+<script>
+	import { CustomCursor, Ripple, Trail } from "mouse-animations";
+
+	function initMouseEffects(): void {
+		// 手机端/触屏（无精确指针）或用户偏好减弱动态效果时禁用
+		if (!window.matchMedia("(pointer: fine)").matches) return;
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			return;
+		}
+
+		const PURPLE = "#a78bfa";
+
+		try {
+			// 拖尾：鼠标移动时的紫色渐隐光点
+			new Trail({
+				color: PURPLE,
+				size: 5, // 光点最大半径 px
+				length: 20, // 保留的拖尾点数
+				decay: 0.05, // 每帧透明度衰减
+			});
+
+			// 波纹：点击位置扩散的半透明圆圈
+			new Ripple({
+				color: "rgba(167, 139, 250, 0.35)",
+				duration: 600,
+				maxSize: 120,
+			});
+
+			// 自定义光标：紫色圆点 + 外圈，隐藏系统指针
+			// smoothness 必须为 1（即时跟随）：Trail 拖尾头部画在真实指针坐标上，
+			// 若外圈用 lerp 缓动（<1）会滞后于指针，导致拖尾起点与外圈中心脱节
+			new CustomCursor({
+				innerColor: PURPLE,
+				outerColor: "rgba(167, 139, 250, 0.5)",
+				innerSize: 8,
+				outerSize: 36,
+				smoothness: 1,
+				hideDefault: true,
+			});
+		} catch (error) {
+			console.error("[MouseEffects] init failed:", error);
+		}
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initMouseEffects);
+	} else {
+		initMouseEffects();
+	}
+</script>
