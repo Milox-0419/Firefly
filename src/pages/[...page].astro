@@ -16,12 +16,17 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 
 const len = page.data.length;
+
+// 首页文章列表开关：关闭后首页不渲染文章列表和分页，只保留壁纸、导航栏和侧边栏
+const showPostList = siteConfig.home?.showPostList !== false;
+const isHomePage = page.currentPage === 1;
 ---
 
 <MainGridLayout>
-  <PostPage page={page} />
+  {showPostList || !isHomePage ? <PostPage page={page} /> : null}
   {
-    page.total > page.size && (
+    (showPostList || !isHomePage) &&
+      page.total > page.size && (
       <Pagination
         class="mx-auto onload-animation"
         page={page}

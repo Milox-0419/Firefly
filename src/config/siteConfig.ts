@@ -120,6 +120,13 @@ export const siteConfig: SiteConfig = {
 		booknav: true,
 	},
 
+	// 首页布局配置
+	home: {
+		// 首页是否显示文章列表，关闭后首页只保留壁纸、导航栏和侧边栏
+		// 关闭时首页的分类导航栏也会同步隐藏，文章仍可通过导航栏的文章入口访问
+		showPostList: false,
+	},
+
 	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航
 	categoryBar: true,
 

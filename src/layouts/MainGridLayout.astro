@@ -124,7 +124,10 @@ const shouldRenderGradient =
 // 检查是否为首页
 const isHomePageCheck = isHomePage(Astro.url.pathname);
 
-const shouldRenderCategoryBar = !!siteConfig.categoryBar;
+// 首页关闭文章列表时，分类导航栏也同步隐藏（无文章列表时分类快捷导航无意义）
+const homePostListHidden =
+	isHomePageCheck && siteConfig.home?.showPostList === false;
+const shouldRenderCategoryBar = !!siteConfig.categoryBar && !homePostListHidden;
 
 // 检查是否在文章详情页
 const isPostPage = !!postSlug;

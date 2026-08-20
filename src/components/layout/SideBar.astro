@@ -131,8 +131,14 @@ const getComponentProps = (
 	config: WidgetComponentConfig | MobileBottomComponentConfig,
 	index: number,
 ): Record<string, unknown> => {
+	// 桌面/平板侧边栏卡片用滚动入场动画（按序号奇偶上下交替滑入，
+	// 实际动画由 features/SidebarReveal.astro 驱动）；移动端底部组件保留原淡入
+	const baseClass = isMobileBottom
+		? "onload-animation"
+		: `sidebar-reveal ${index % 2 === 0 ? "sidebar-reveal-up" : "sidebar-reveal-down"}`;
+
 	const baseProps: Record<string, unknown> = {
-		class: "onload-animation",
+		class: baseClass,
 		style: `animation-delay: ${getAnimationDelay(index)}`,
 		widgetConfig: config,
 	};

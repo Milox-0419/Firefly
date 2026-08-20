@@ -89,6 +89,11 @@ export type SiteConfig = {
 		dynamic: boolean; // 动态页面开关
 	};
 
+	// 首页布局配置
+	home?: {
+		showPostList?: boolean; // 首页是否显示文章列表，关闭后首页只保留壁纸、导航栏和侧边栏，默认 true
+	};
+
 	// 分类导航栏开关
 	categoryBar?: boolean;
 
