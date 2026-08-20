@@ -101,10 +101,21 @@
 
 		try {
 			// 波纹：点击位置扩散的半透明圆圈
+			// 样式依赖下方静态 <style>（见文件底部）：库初始化时注入 head 的
+			// 同款样式会被 Swup 的 head 重建丢弃，导致波纹元素样式丢失、
+			// 动画不触发、无法清理，在左上角堆叠成紫色色块
 			new Ripple({
 				color: "rgba(167, 139, 250, 0.35)",
 				duration: 600,
 				maxSize: 120,
+			});
+
+			// Swup 页面切换时清理残留波纹：动画未触发时 animationend 不会执行，
+			// 库不会移除元素，此处兜底清理，防止泄漏堆积
+			document.addEventListener("swup:content:replace", () => {
+				document
+					.querySelectorAll(".__ma-ripple-el")
+					.forEach((el) => el.remove());
 			});
 
 			// 拖尾圈光标（替代原 Trail + CustomCursor 组合）
@@ -120,3 +131,25 @@
 		initMouseEffects();
 	}
 </script>
+
+<!-- 波纹样式静态副本：与库运行时注入 head 的规则完全一致。
+     库注入的 <style> 会被 Swup 页面切换时的 head 重建丢弃，
+     而本静态样式由 Astro 编译进持久样式表，切换后依然生效 -->
+<style is:global>
+	@keyframes __ma-ripple-expand {
+		from {
+			transform: scale(0);
+			opacity: 1;
+		}
+		to {
+			transform: scale(1);
+			opacity: 0;
+		}
+	}
+	.__ma-ripple-el {
+		position: fixed;
+		border-radius: 50%;
+		pointer-events: none;
+		animation: __ma-ripple-expand var(--_dur) ease-out forwards;
+	}
+</style>
