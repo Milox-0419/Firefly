@@ -1,86 +1,112 @@
 ---
-// 黑客风动态粒子背景（@tsparticles/astro 官方组件）
-// 层级：壁纸(z-10) / 横幅文字(z-20) / 主内容(z-30) 之上，导航栏(z-50/80) 之下
-// 粒子与连线不拦截任何点击（pointer-events: none）
-import Particles from "@tsparticles/astro";
-import type { ISourceOptions } from "@tsparticles/engine";
-
-// 终端/矩阵绿 + 青色点缀，低透明度避免干扰正文阅读
-const options: ISourceOptions = {
-	fullScreen: { enable: false },
-	fpsLimit: 60,
-	detectRetina: true,
-	interactivity: {
-		detectsOn: "window",
-		events: {
-			onHover: { enable: true, mode: "grab" },
-			onClick: { enable: true, mode: "repulse" },
-		},
-		modes: {
-			// 鼠标悬停：附近粒子用连线向光标聚拢（黑客终端感）
-			grab: {
-				distance: 150,
-				links: { opacity: 0.45 },
-			},
-			// 点击：粒子轻微散开
-			repulse: {
-				distance: 180,
-				duration: 0.6,
-			},
-		},
-	},
-	particles: {
-		number: {
-			// 按面积限密度，控制总量，避免影响加载与滚动性能
-			value: 50,
-			density: { enable: true, width: 1200 },
-		},
-		color: { value: ["#00ff9c", "#22d3ee", "#9aff9c"] },
-		shape: { type: "circle" },
-		opacity: { value: { min: 0.15, max: 0.5 } },
-		size: { value: { min: 1, max: 2.2 } },
-		links: {
-			enable: true,
-			color: "#00ff9c",
-			distance: 130,
-			opacity: 0.15,
-			width: 1,
-		},
-		move: {
-			enable: true,
-			speed: 0.5, // 缓慢飘浮
-			direction: "none",
-			random: true,
-			straight: false,
-			outModes: { default: "out" },
-		},
-	},
-};
+// 深色科技感动态粒子背景（tsParticles）
+// - 最底层：z-index: -1，不遮挡壁纸、内容、导航栏
+// - 组件渲染在 Swup 替换区域（#swup-container）之外，页面切换时画布持久存在
+// - 引擎初始化与粒子加载在同一脚本 bundle 内直接调用 tsParticles.load，
+//   避免官方 <Particles /> 组件跨 bundle 模块实例隔离导致部署后不渲染的问题
 ---
 
-<div
-	id="particle-background"
-	class="fixed inset-0 pointer-events-none"
-	style="z-index: 35;"
-	aria-hidden="true"
->
-	<Particles id="hacker-particles" options={options} />
-</div>
+<div id="particle-background" aria-hidden="true"></div>
 
 <script>
-	import { initParticlesEngine } from "@tsparticles/astro";
+	import { tsParticles } from "@tsparticles/engine";
 	import { loadSlim } from "@tsparticles/slim";
 
-	// 在客户端初始化一次引擎（模块级单例，内部有幂等保护）
-	// 必须在 <astro-particles> 元素升级前开始初始化
-	void initParticlesEngine(async (engine) => {
-		await loadSlim(engine);
-	});
+	async function initParticleBackground(): Promise<void> {
+		const el = document.getElementById("particle-background");
+		// 元素缺失 / 已初始化 / 用户偏好减弱动态效果时跳过
+		if (!el || el.dataset.loaded === "true") return;
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			return;
+		}
+		el.dataset.loaded = "true";
+
+		try {
+			await loadSlim(tsParticles);
+			await tsParticles.load({
+				id: "hacker-particles",
+				element: el,
+				options: {
+					fullScreen: { enable: false },
+					fpsLimit: 60,
+					detectRetina: true,
+					// 背景完全透明，不遮挡壁纸
+					background: { color: { value: "transparent" } },
+					interactivity: {
+						// 监听 window，容器 pointer-events: none 也能响应鼠标
+						detectsOn: "window",
+						events: {
+							onHover: { enable: true, mode: "grab" },
+							onClick: { enable: true, mode: "repulse" },
+						},
+						modes: {
+							// 鼠标悬停：附近粒子用连线向光标聚拢
+							grab: {
+								distance: 160,
+								links: { opacity: 0.45 },
+							},
+							// 点击：粒子轻微散开
+							repulse: {
+								distance: 180,
+								duration: 0.6,
+							},
+						},
+					},
+					particles: {
+						number: {
+							// 固定数量 70（要求 60-80），关闭密度换算保证各分辨率一致
+							value: 70,
+							density: { enable: false },
+						},
+						// 终端绿 + 青色点缀，深色科技感
+						color: { value: ["#00ff9c", "#22d3ee", "#9aff9c"] },
+						shape: { type: "circle" },
+						opacity: { value: { min: 0.15, max: 0.5 } },
+						size: { value: { min: 1, max: 2.2 } },
+						links: {
+							enable: true,
+							color: "#00ff9c",
+							distance: 130,
+							opacity: 0.15,
+							width: 1,
+						},
+						move: {
+							enable: true,
+							speed: 0.5, // 缓慢飘浮
+							direction: "none",
+							random: true,
+							straight: false,
+							outModes: { default: "out" },
+						},
+					},
+				},
+			});
+		} catch (error) {
+			// 初始化失败时清除标记，允许后续重试，并在控制台输出便于排查
+			el.dataset.loaded = "";
+			console.error("[ParticleBackground] init failed:", error);
+		}
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", () => {
+			void initParticleBackground();
+		});
+	} else {
+		void initParticleBackground();
+	}
 </script>
 
 <style>
+	/* 最底层粒子层：固定铺满视口，z-index: -1，不拦截任何点击 */
+	#particle-background {
+		position: fixed;
+		inset: 0;
+		z-index: -1;
+		pointer-events: none;
+	}
+
 	/* 粒子画布铺满容器 */
-	#particle-background :global(astro-particles),
 	#particle-background :global(canvas) {
 		display: block;
 		width: 100%;
