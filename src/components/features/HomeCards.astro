@@ -73,10 +73,10 @@ const cards = sidebarLayoutConfig.leftComponents.filter((comp) => comp.enable);
 		}
 	}
 
-	/* 竖版卡片：固定 3:4 纵横比，内部 widget 卡片撑满整格，
+	/* 竖版卡片：固定 2:3 纵横比，所有卡片尺寸一致，内部 widget 卡片撑满整格，
 	   内容超出时可滚动；widget 内的图片保持自身原有纵横比 */
 	.home-card {
-		aspect-ratio: 3 / 4;
+		aspect-ratio: 2 / 3;
 		overflow-y: auto;
 		border-radius: 0.75rem;
 	}
