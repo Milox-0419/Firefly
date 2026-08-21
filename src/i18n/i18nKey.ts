@@ -343,6 +343,11 @@ enum I18nKey {
 	siteStatsLastUpdate = "siteStatsLastUpdate",
 	siteStatsDaysAgo = "siteStatsDaysAgo",
 	siteStatsDays = "siteStatsDays",
+
+	// 站点访问（不蒜子）
+	visitStats = "visitStats",
+	visitStatsTotalPv = "visitStatsTotalPv",
+	visitStatsTotalUv = "visitStatsTotalUv",
 	today = "today",
 
 	// 站点信息

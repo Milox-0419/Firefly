@@ -29,7 +29,11 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { getImageQuality } from "@/utils/image-utils";
-import { getBackgroundImages, isHomePage, getEffectiveWallpaperMode } from "@/utils/layout-utils";
+import {
+	getBackgroundImages,
+	getEffectiveWallpaperMode,
+	isHomePage,
+} from "@/utils/layout-utils";
 import {
 	generateGridClasses,
 	generateMainContentClasses,
@@ -91,7 +95,8 @@ const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 // 壁纸是否需要渲染（首页模式或文章页模式任一需要壁纸即渲染）
 const homeNeedsWallpaper = homeWallpaperMode !== "none";
 const postNeedsWallpaper = postWallpaperMode !== "none";
-const shouldRenderWallpaper = homeNeedsWallpaper || postNeedsWallpaper || isWallpaperSwitchable;
+const shouldRenderWallpaper =
+	homeNeedsWallpaper || postNeedsWallpaper || isWallpaperSwitchable;
 
 // 检查是否启用水波纹动画效果
 const wavesConfig = backgroundWallpaper.common?.waves?.enable;

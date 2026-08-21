@@ -350,6 +350,9 @@ export const ko: Translation = {
 	[Key.siteStatsLastUpdate]: "최근 활동",
 	[Key.siteStatsDaysAgo]: "{days}일 전",
 	[Key.siteStatsDays]: "{days}일",
+	[Key.visitStats]: "사이트 방문",
+	[Key.visitStatsTotalPv]: "총 방문 수",
+	[Key.visitStatsTotalUv]: "총 방문자 수",
 	[Key.today]: "오늘",
 
 	// Site Info

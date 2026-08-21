@@ -12,6 +12,7 @@ import SidebarTOC from "@/components/widget/SidebarTOC.astro";
 import SiteInfo from "@/components/widget/SiteInfo.astro";
 import SiteStats from "@/components/widget/SiteStats.astro";
 import Tags from "@/components/widget/Tags.astro";
+import VisitStats from "@/components/widget/VisitStats.astro";
 import { sidebarLayoutConfig } from "@/config";
 
 // 与 SideBar.astro 保持一致的组件映射表
@@ -23,13 +24,17 @@ const componentMap = {
 	sidebarToc: SidebarTOC,
 	advertisement: Advertisement,
 	stats: SiteStats,
+	visitStats: VisitStats,
 	calendar: Calendar,
 	music: Music,
 	siteInfo: SiteInfo,
 	dynamic: Dynamic,
 };
 
-const cards = sidebarLayoutConfig.leftComponents.filter((comp) => comp.enable);
+// 首页卡片区保持原有四张卡：访问统计只在侧边栏展示，不参与首页竖版卡片排布
+const cards = sidebarLayoutConfig.leftComponents.filter(
+	(comp) => comp.enable && comp.type !== "visitStats",
+);
 ---
 
 {

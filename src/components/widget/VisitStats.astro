@@ -1,0 +1,104 @@
+---
+// 站点访问统计卡片：基于不蒜子（Busuanzi）免费统计服务，展示总访问量与总访客数
+// 数据由不蒜子脚本异步填充，加载完成前显示 "--" 占位
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+	// 主实例承载不蒜子官方 id；同一页的其他实例（如移动端底部）用类同步
+	primary?: boolean;
+}
+
+const { class: className, style, widgetConfig, primary = false } = Astro.props;
+
+const showTitle = widgetConfig?.showTitle !== false;
+---
+
+<WidgetLayout
+	name={i18n(I18nKey.visitStats)}
+	showTitle={showTitle}
+	id="visit-stats"
+	class={className}
+	style={style}
+>
+	<div class="grid grid-cols-2 gap-2 px-1 py-2 text-center">
+		<div class="flex flex-col items-center gap-1">
+			<div class="text-(--primary) text-2xl">
+				<Icon is:inline name="material-symbols:visibility-outline" />
+			</div>
+			<span
+				id={primary ? "busuanzi_value_site_pv" : undefined}
+				class="visit-stats-pv text-lg font-bold text-neutral-900 dark:text-neutral-100"
+				>--</span
+			>
+			<span class="text-sm text-neutral-500 dark:text-neutral-400"
+				>{i18n(I18nKey.visitStatsTotalPv)}</span
+			>
+		</div>
+		<div class="flex flex-col items-center gap-1">
+			<div class="text-(--primary) text-2xl">
+				<Icon is:inline name="material-symbols:person-outline" />
+			</div>
+			<span
+				id={primary ? "busuanzi_value_site_uv" : undefined}
+				class="visit-stats-uv text-lg font-bold text-neutral-900 dark:text-neutral-100"
+				>--</span
+			>
+			<span class="text-sm text-neutral-500 dark:text-neutral-400"
+				>{i18n(I18nKey.visitStatsTotalUv)}</span
+			>
+		</div>
+	</div>
+</WidgetLayout>
+
+<script is:inline>
+	// 全站只注入一次不蒜子脚本；其内部按 URL 计数，
+	// Swup 无刷新切页时会自动重新统计并更新 #busuanzi_value_* 元素
+	(function () {
+		if (document.getElementById("busuanzi-script")) return;
+		var script = document.createElement("script");
+		script.id = "busuanzi-script";
+		script.async = true;
+		script.src = "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
+		document.head.appendChild(script);
+	})();
+
+	// 不蒜子只填充官方 id 元素，页面上其他实例（如移动端底部）通过观察其
+	// 文本变化同步到同名 class 元素
+	(function () {
+		if (window.__visitStatsSyncInit) return;
+		window.__visitStatsSyncInit = true;
+
+		function syncValue(sourceId, targetClass) {
+			var source = document.getElementById(sourceId);
+			if (!source) return;
+			var targets = document.querySelectorAll("." + targetClass);
+			for (var i = 0; i < targets.length; i++) {
+				if (targets[i] !== source) targets[i].textContent = source.textContent;
+			}
+		}
+
+		function syncAll() {
+			syncValue("busuanzi_value_site_pv", "visit-stats-pv");
+			syncValue("busuanzi_value_site_uv", "visit-stats-uv");
+		}
+
+		var pvEl = document.getElementById("busuanzi_value_site_pv");
+		var uvEl = document.getElementById("busuanzi_value_site_uv");
+		if (pvEl && uvEl && "MutationObserver" in window) {
+			var observer = new MutationObserver(syncAll);
+			observer.observe(pvEl, { childList: true, characterData: true, subtree: true });
+			observer.observe(uvEl, { childList: true, characterData: true, subtree: true });
+		}
+		// 脚本就绪前的兼容兑底 + 切页后重新同步
+		document.addEventListener("swup:contentReplaced", function () {
+			setTimeout(syncAll, 300);
+		});
+	})();
+</script>

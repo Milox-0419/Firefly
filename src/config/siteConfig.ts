@@ -1,5 +1,5 @@
-import type { SiteConfig } from "@/types/siteConfig";
 import type { truncate } from "node:fs/promises";
+import type { SiteConfig } from "@/types/siteConfig";
 
 // 定义站点语言
 // 语言代码，例如：'zh_CN', 'zh_TW', 'en', 'ja', 'ru', 'ko'。
@@ -16,8 +16,7 @@ export const siteConfig: SiteConfig = {
 	site_url: "https://milox.dpdns.org",
 
 	// 站点描述
-	description:
-		"欢迎来到我的博客！！！",
+	description: "欢迎来到我的博客！！！",
 
 	// 站点关键词
 	keywords: [

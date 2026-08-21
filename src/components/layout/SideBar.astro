@@ -11,6 +11,7 @@ import SidebarTOC from "@/components/widget/SidebarTOC.astro";
 import SiteInfo from "@/components/widget/SiteInfo.astro";
 import SiteStats from "@/components/widget/SiteStats.astro";
 import Tags from "@/components/widget/Tags.astro";
+import VisitStats from "@/components/widget/VisitStats.astro";
 import { sidebarLayoutConfig } from "@/config";
 import type {
 	MobileBottomComponentConfig,
@@ -49,6 +50,7 @@ const componentMap = {
 	sidebarToc: SidebarTOC,
 	advertisement: Advertisement,
 	stats: SiteStats,
+	visitStats: VisitStats,
 	calendar: Calendar,
 	music: Music,
 	siteInfo: SiteInfo,
@@ -165,6 +167,11 @@ const getComponentProps = (
 			headings: Astro.props.headings || [],
 			encrypted: Astro.props.encrypted || false,
 		};
+	}
+
+	// 访问统计组件：侧边栏实例承载不蒜子官方 id，移动端底部实例用类同步
+	if (config.type === "visitStats") {
+		return { ...baseProps, primary: !isMobileBottom };
 	}
 
 	return baseProps;

@@ -71,8 +71,12 @@ type TabKey = "appearance" | "wallpaper" | "effects";
 
 let hue = $state(getHue());
 const defaultHue = getDefaultHue();
-const effectiveDefaultMode = getEffectiveWallpaperMode(typeof window !== "undefined" ? window.location.pathname : "/");
-let wallpaperMode: WALLPAPER_MODE = $state(effectiveDefaultMode as WALLPAPER_MODE);
+const effectiveDefaultMode = getEffectiveWallpaperMode(
+	typeof window !== "undefined" ? window.location.pathname : "/",
+);
+let wallpaperMode: WALLPAPER_MODE = $state(
+	effectiveDefaultMode as WALLPAPER_MODE,
+);
 const defaultWallpaperMode = effectiveDefaultMode;
 let currentLayout: "list" | "grid" = $state("list");
 const defaultLayout = siteConfig.postListLayout.defaultMode;
