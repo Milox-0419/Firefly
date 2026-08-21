@@ -31,10 +31,8 @@ const componentMap = {
 	dynamic: Dynamic,
 };
 
-// 首页卡片区保持原有四张卡：访问统计只在侧边栏展示，不参与首页竖版卡片排布
-const cards = sidebarLayoutConfig.leftComponents.filter(
-	(comp) => comp.enable && comp.type !== "visitStats",
-);
+// 首页竖版卡片与左侧边栏组件保持一致（访问统计卡替代了原分类卡）
+const cards = sidebarLayoutConfig.leftComponents.filter((comp) => comp.enable);
 ---
 
 {
