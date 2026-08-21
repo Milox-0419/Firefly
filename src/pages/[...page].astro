@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from "astro";
 import Pagination from "@/components/common/Pagination.astro";
+import HomeCards from "@/components/features/HomeCards.astro";
 import PostPage from "@/components/layout/PostPage.astro";
 import { siteConfig } from "@/config";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
@@ -17,13 +18,13 @@ const { page } = Astro.props;
 
 const len = page.data.length;
 
-// 首页文章列表开关：关闭后首页不渲染文章列表和分页，只保留壁纸、导航栏和侧边栏
+// 首页文章列表开关：关闭后首页在原文章列表位置渲染竖版卡片区
 const showPostList = siteConfig.home?.showPostList !== false;
 const isHomePage = page.currentPage === 1;
 ---
 
 <MainGridLayout>
-  {showPostList || !isHomePage ? <PostPage page={page} /> : null}
+  {showPostList || !isHomePage ? <PostPage page={page} /> : <HomeCards />}
   {
     (showPostList || !isHomePage) &&
       page.total > page.size && (

@@ -1,12 +1,23 @@
 ---
 // 侧边栏卡片滚动入场动画
 // 卡片进入视口时上下交替滑入：奇数序号卡片从底部向上滑入，偶数序号从顶部向下滑入
-// （方向类 sidebar-reveal-up/down 由 SideBar.astro 按卡片序号奇偶赋予）
-// 卡片保持侧边栏纵向堆叠布局，内部图片维持原有纵横比
+// （方向类 sidebar-reveal-up/down 由 SideBar.astro / HomeCards.astro 按序号奇偶赋予）
+// 首页竖版卡片模式（body.home-cards-mode）：隐藏侧边栏，卡片在主内容区单列占满页宽
 // 仅桌面/平板端（>=768px）生效，移动端底部组件不受影响；尊重“减弱动态效果”偏好
 ---
 
 <style is:global>
+	/* 首页竖版卡片模式：卡片已移到主内容区，隐藏侧边栏避免重复 */
+	body.home-cards-mode #left-sidebar,
+	body.home-cards-mode #mobile-bottom-sidebar {
+		display: none;
+	}
+	/* 网格子元素逐个占满整行（特异性高于 Tailwind 的列定位类） */
+	body.home-cards-mode #main-grid > * {
+		grid-column: 1 / -1;
+		grid-row: auto;
+	}
+
 	@media (min-width: 768px) {
 		.sidebar-reveal {
 			opacity: 0;

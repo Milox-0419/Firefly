@@ -1043,11 +1043,14 @@ function disableAnimation() {
 
       // 首页隐藏文章列表时同步隐藏分类导航栏：该区域在 Swup 静态区不被替换，
       // 需在页面切换时根据目标路径手动同步显隐状态
-      if ((siteConfig.home?.showPostList ?? true) === false) {
+      const homeCardsMode = (siteConfig.home?.showPostList ?? true) === false;
+      if (homeCardsMode) {
         const categoryBarWrapper = document.getElementById("category-bar-wrapper");
         if (categoryBarWrapper) {
           categoryBarWrapper.style.display = isHome ? "none" : "";
         }
+        // 首页竖版卡片模式：body 类驱动隐藏侧边栏、网格单列（样式见 SidebarReveal.astro）
+        document.body.classList.toggle("home-cards-mode", isHome);
       }
 
       // 移动端 banner/全屏模式非首页：隐藏壁纸并调整内容位置（首页由 visit:start 和 page:view 处理）
@@ -1615,6 +1618,14 @@ function disableAnimation() {
     const sidebarPosition = mainGrid.getAttribute("data-sidebar-position") || "left";
     const tabletSidebar = mainGrid.getAttribute("data-tablet-sidebar") || "left";
     const showBothSidebarsOnPostPage = mainGrid.getAttribute("data-show-both-sidebars-on-post") === "true";
+
+    // 首页竖版卡片模式：侧边栏已隐藏，强制单列布局（子元素定位由 CSS 覆盖，
+    // 不能调 applySingleColLayout，否则会清除 footer/内容区的列定位类导致离开首页后错位）
+    if (document.body.classList.contains("home-cards-mode")) {
+      for (const cls of GRID_COL_CLASSES) mainGrid.classList.remove(cls);
+      mainGrid.classList.add("grid-cols-1");
+      return;
+    }
 
     // 侧边栏禁用 或 文章详情页隐藏侧边栏时，保持单列布局
     if (!sidebarEnabled || (isPostPage && sidebarHideOnPost)) {

@@ -248,7 +248,9 @@ const updatedGridConfig: ResponsiveSidebarConfig = {
 	tabletSidebar: effectiveTabletSidebar,
 };
 
-const { gridCols } = generateGridClasses(updatedGridConfig);
+const { gridCols: baseGridCols } = generateGridClasses(updatedGridConfig);
+// 首页竖版卡片模式：侧边栏隐藏，网格改单列，卡片渲染在原文章列表位置
+const gridCols = homePostListHidden ? "grid-cols-1" : baseGridCols;
 const sidebarClass = generateSidebarClasses(updatedGridConfig);
 const rightSidebarClass =
 	effectiveIsBothSidebars || sidebarLayoutConfig.position === "right"
@@ -321,6 +323,13 @@ const hasMultipleImages =
 {shouldEnableTransparency && (
 	<script>
 		document.body.classList.add('wallpaper-transparent');
+	</script>
+)}
+
+<!-- 首页竖版卡片模式：隐藏侧边栏避免与卡片区重复（样式见 SidebarReveal.astro） -->
+{homePostListHidden && (
+	<script>
+		document.body.classList.add('home-cards-mode');
 	</script>
 )}
 
