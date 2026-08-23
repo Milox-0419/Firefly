@@ -1,0 +1,33 @@
+---
+// src/components/widget/MusicVisualizerCard.astro
+---
+
+<a
+  href="https://music.milox.dpdns.org"
+  target="_blank"
+  class="music-visualizer-card"
+  style="
+    display: block;
+    background: linear-gradient(135deg, #0d0d2b, #1a1a4e);
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-decoration: none;
+    color: #fff;
+    border: 1px solid rgba(100, 100, 255, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+    margin-top: 12px;
+  "
+  onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 8px 24px rgba(100,100,255,0.25)'"
+  onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'"
+>
+  <div style="font-size: 28px;">🎹</div>
+  <div style="font-weight: 600; margin-top: 4px;">3D 音乐可视化</div>
+  <div style="font-size: 12px; opacity: 0.6; margin-top: 2px;">沉浸式音乐空间 · 点击进入</div>
+</a>
+
+<style>
+  .music-visualizer-card {
+    /* 如果你需要额外样式，可以在这里补充 */
+  }
+</style>
