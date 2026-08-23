@@ -5,7 +5,6 @@ import { navigateToPage } from "@utils/navigation-utils";
 import { onMount } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
 import type { SearchResult } from "@/global";
-import { FLOATING_PANEL_CLOSE_EVENT } from "@/utils/floating-panel-utils";
 import { url as formatUrl, getSearchUrl } from "@/utils/url-utils";
 
 // --- State ---
@@ -21,8 +20,7 @@ const fakeResult: SearchResult[] = [
 	{
 		url: formatUrl("/"),
 		meta: { title: "This Is a Fake Search Result" },
-		excerpt:
-			"Because Pagefind cannot work in the <mark>dev</mark> environment.",
+		excerpt: "Because Pagefind cannot work in the <mark>dev</mark> environment.",
 	},
 	{
 		url: formatUrl("/"),
@@ -32,24 +30,30 @@ const fakeResult: SearchResult[] = [
 ];
 
 // --- UI Logic ---
-const togglePanel = () => {
-	document
-		.getElementById("search-panel")
-		?.classList.toggle("float-panel-closed");
+// 打开模态框
+const openModal = () => {
+	const modal = document.getElementById("searchModal");
+	if (modal) {
+		modal.showModal();
+		// 聚焦输入框
+		setTimeout(() => {
+			const input = document.getElementById("searchInput") as HTMLInputElement;
+			if (input) input.focus();
+		}, 100);
+	}
 };
 
-const setPanelVisibility = (show: boolean): void => {
-	const panel = document.getElementById("search-panel");
-	if (!panel || !keyword) return;
-	show
-		? panel.classList.remove("float-panel-closed")
-		: panel.classList.add("float-panel-closed");
+// 关闭模态框
+const closeModal = () => {
+	const modal = document.getElementById("searchModal");
+	if (modal) modal.close();
 };
 
-const closeSearchPanel = (): void => {
-	document.getElementById("search-panel")?.classList.add("float-panel-closed");
+// 重置状态（关闭面板时清空结果）
+const resetSearch = () => {
 	keyword = "";
 	result = [];
+	isSearching = false;
 };
 
 const cancelPendingSearch = (): void => {
@@ -60,7 +64,8 @@ const cancelPendingSearch = (): void => {
 
 const handleResultClick = (event: Event, url: string): void => {
 	event.preventDefault();
-	closeSearchPanel();
+	closeModal();
+	resetSearch();
 	navigateToPage(url);
 };
 
@@ -68,7 +73,6 @@ const handleResultClick = (event: Event, url: string): void => {
 const search = async (keyword: string): Promise<void> => {
 	if (!keyword) {
 		cancelPendingSearch();
-		setPanelVisibility(false);
 		result = [];
 		return;
 	}
@@ -94,19 +98,16 @@ const search = async (keyword: string): Promise<void> => {
 			if (requestId !== searchRequestId) return;
 
 			result = searchResults;
-			setPanelVisibility(true);
 		} catch (error) {
 			if (requestId !== searchRequestId) return;
-
 			console.error("Search error:", error);
 			result = [];
-			setPanelVisibility(false);
 		} finally {
 			if (requestId === searchRequestId) {
 				isSearching = false;
 			}
 		}
-	}, 300); // 300ms debounce
+	}, 300);
 };
 
 // --- Initialization onMount ---
@@ -121,124 +122,152 @@ onMount(() => {
 		initializePagefind();
 	} else {
 		if (window.pagefind) {
-			// If script already loaded
 			initializePagefind();
 		} else {
-			// Listen for the event
-			document.addEventListener("pagefindready", initializePagefind, {
-				once: true,
-			});
-			document.addEventListener("pagefindloaderror", initializePagefind, {
-				once: true,
-			});
+			document.addEventListener("pagefindready", initializePagefind, { once: true });
+			document.addEventListener("pagefindloaderror", initializePagefind, { once: true });
 		}
 	}
 
-	const panel = document.getElementById("search-panel");
-	panel?.addEventListener(FLOATING_PANEL_CLOSE_EVENT, cancelPendingSearch);
-
 	return () => {
-		panel?.removeEventListener(FLOATING_PANEL_CLOSE_EVENT, cancelPendingSearch);
 		document.removeEventListener("pagefindready", initializePagefind);
 		document.removeEventListener("pagefindloaderror", initializePagefind);
 		cancelPendingSearch();
 	};
 });
 
-// --- Reactive Statements ---
+// --- Reactive ---
 $: if (initialized && (keyword || keyword === "")) {
 	search(keyword);
 }
 </script>
 
-<!-- search toggle btn (all screen sizes) -->
-<button on:click={togglePanel} aria-label="Search Panel" aria-controls="search-panel" aria-expanded="false" id="search-switch"
+<!-- search toggle btn -->
+<button on:click={openModal} aria-label="Search" id="search-switch"
 		class="btn-plain scale-animation rounded-full w-9 h-9 md:w-11 md:h-11 active:scale-90">
     <Icon icon="material-symbols:search" class="text-[1.25rem]"></Icon>
 </button>
 
-<!-- search panel -->
-<div id="search-panel" class="float-panel float-panel-closed search-panel absolute md:w-120
-top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2"
-     data-floating-panel data-floating-panel-trigger="search-switch" inert aria-hidden="true">
+<!-- Modal Dialog (中央弹窗) -->
+<dialog id="searchModal" style="
+	background: rgba(0,0,0,0.6);
+	border: none;
+	border-radius: 16px;
+	padding: 0;
+	backdrop-filter: blur(8px);
+	width: 90%;
+	max-width: 520px;
+	margin: auto;
+	top: 50%;
+	transform: translateY(-50%);
+">
+	<div style="
+		background: var(--page-bg, #1a1a2e);
+		border-radius: 16px;
+		padding: 24px;
+		box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+	">
+		<!-- 输入框 -->
+		<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+			<Icon icon="material-symbols:search" class="text-[1.5rem] text-(--text-secondary)" />
+			<input
+				id="searchInput"
+				placeholder={i18n(I18nKey.search)}
+				bind:value={keyword}
+				style="
+					flex: 1;
+					padding: 12px 0;
+					background: transparent;
+					border: none;
+					border-bottom: 2px solid rgba(255,255,255,0.1);
+					color: #fff;
+					font-size: 18px;
+					outline: none;
+					transition: border-color 0.2s;
+				"
+				on:focus={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
+				on:blur={(e) => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'}
+			/>
+			<button
+				on:click={closeModal}
+				style="
+					background: transparent;
+					border: none;
+					color: #888;
+					font-size: 24px;
+					cursor: pointer;
+					padding: 0 8px;
+				"
+				aria-label="关闭搜索"
+			>
+				✕
+			</button>
+		</div>
 
-    <!-- search bar inside panel -->
-    <div id="search-bar-inside" class="flex relative transition-all items-center h-11 rounded-xl
-      bg-black/4 hover:bg-black/6 focus-within:bg-black/6
-      dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10
-  ">
-        <Icon icon="material-symbols:search"
-              class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"></Icon>
-        <input placeholder={i18n(I18nKey.search)} bind:value={keyword}
-               class="pl-10 absolute inset-0 text-sm bg-transparent outline-0
-               text-black/50 dark:text-white/50"
-        >
-    </div>
-
-    <!-- search results -->
-    {#if isSearching}
-        <div class="transition first-of-type:mt-2 lg:first-of-type:mt-0 block rounded-xl text-lg px-3 py-2 text-50">
-            {i18n(I18nKey.searchLoading)}
-        </div>
-    {:else if result.length > 0}
-        {#each result.slice(0, 5) as item}
-            <a href={item.url}
-               on:click={(e) => handleResultClick(e, item.url)}
-               class="transition first-of-type:mt-2 lg:first-of-type:mt-0 group block
-           rounded-xl text-lg px-3 py-2 hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active)">
-                <div class="transition text-90 inline-flex font-bold group-hover:text-(--primary)">
-                    {@html item.meta.title}
-                    <Icon icon="fa7-solid:chevron-right"
-                          class="transition text-[0.75rem] translate-x-1 my-auto text-(--primary)"></Icon>
-                </div>
-                {#if item.excerpt.includes('<mark>')}
-                    <div class="transition text-sm text-50" style="display: flex; align-items: flex-start; margin-top: 0.1rem">
-                        <div>
-                            {@html item.excerpt}
-                        </div>
-                    </div>
-                {/if}
-
-                {#if item.content && item.content.includes('<mark>')}
-                    <div class="transition text-sm text-30" style="display: flex; align-items: flex-start; margin-top: 0.1rem">
-                        <span style="display: inline-block; background-color: var(--btn-plain-bg-active); color: var(--primary); padding: 0.1em 0.4em; border-radius: 5px; font-size: 0.75em; font-weight: 600; margin-right: 0.5em; shrink: 0;">
-                            {i18n(I18nKey.searchContent)}
-                        </span>
-                        <div>
-                            {@html item.content}
-                        </div>
-                    </div>
-                {/if}
-            </a>
-        {/each}
-        {#if result.length > 5}
-            <a href={getSearchUrl(keyword)}
-               on:click={(e) => handleResultClick(e, getSearchUrl(keyword))}
-               class="transition first-of-type:mt-2 lg:first-of-type:mt-0 group block rounded-xl text-lg px-3 py-2 hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active) text-(--primary) font-bold text-center">
-                <span class="inline-flex items-center">
-                    {i18n(I18nKey.searchViewMore).replace('{count}', (result.length - 5).toString())}
-                    <Icon icon="fa7-solid:arrow-right" class="transition text-[0.75rem] ml-1"></Icon>
-                </span>
-            </a>
-        {/if}
-    {:else if result.length === 0}
-        <div class="transition first-of-type:mt-2 lg:first-of-type:mt-0 block rounded-xl text-lg px-3 py-2 text-50">
-            {i18n(I18nKey.searchNoResults)}
-        </div>
-    {:else if keyword}
-        <div class="transition first-of-type:mt-2 lg:first-of-type:mt-0 block rounded-xl text-lg px-3 py-2 text-50">
-            {i18n(I18nKey.searchTypeSomething)}
-        </div>
-    {/if}
-</div>
+		<!-- 搜索结果 -->
+		{#if isSearching}
+			<div style="padding: 20px 0; color: #888; text-align: center;">
+				{i18n(I18nKey.searchLoading)}
+			</div>
+		{:else if result.length > 0}
+			<div style="max-height: 400px; overflow-y: auto;">
+				{#each result.slice(0, 10) as item}
+					<a
+						href={item.url}
+						on:click={(e) => handleResultClick(e, item.url)}
+						style="
+							display: block;
+							padding: 10px 12px;
+							border-radius: 8px;
+							transition: background 0.15s;
+							color: #eee;
+							text-decoration: none;
+							margin-bottom: 2px;
+						"
+						on:mouseenter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+						on:mouseleave={(e) => e.currentTarget.style.background = 'transparent'}
+					>
+						<div style="font-weight: 600; color: var(--primary);">
+							{@html item.meta.title}
+						</div>
+						{#if item.excerpt.includes('<mark>')}
+							<div style="font-size: 13px; color: #aaa; margin-top: 2px;">
+								{@html item.excerpt}
+							</div>
+						{/if}
+					</a>
+				{/each}
+				{#if result.length > 10}
+					<a
+						href={getSearchUrl(keyword)}
+						on:click={(e) => handleResultClick(e, getSearchUrl(keyword))}
+						style="
+							display: block;
+							padding: 12px;
+							text-align: center;
+							color: var(--primary);
+							font-weight: bold;
+							text-decoration: none;
+						"
+					>
+						{i18n(I18nKey.searchViewMore).replace('{count}', (result.length - 10).toString())}
+					</a>
+				{/if}
+			</div>
+		{:else if keyword}
+			<div style="padding: 20px 0; color: #888; text-align: center;">
+				{i18n(I18nKey.searchNoResults)}
+			</div>
+		{/if}
+	</div>
+</dialog>
 
 <style>
-    input:focus {
-        outline: 0;
-    }
-
-    .search-panel {
-        max-height: calc(100vh - 100px);
-        overflow-y: auto;
-    }
+	input::placeholder {
+		color: #666;
+	}
+	/* 确保 dialog 背景透明，只显示内容区域 */
+	#searchModal::backdrop {
+		background: rgba(0,0,0,0.6);
+	}
 </style>
