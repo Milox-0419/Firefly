@@ -24,13 +24,13 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	meting: {
 		// Meting API 地址
 		// 默认使用官方 API，也可以使用自定义 API
-		api: "https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r",
+		api: "https://meting.elysium-stack.cn/api",
 		// 音乐平台：netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
-		server: "netease",
+		server: "kuwo",
 		// 类型：song=单曲, playlist=歌单, album=专辑, search=搜索, artist=艺术家
 		type: "playlist",
 		// 歌单/专辑/单曲 ID 或搜索关键词
-		id: "10046455237",
+		id: "18305993457",
 		// 认证 token（可选）
 		auth: "",
 		// 备用 API 配置（当主 API 失败时使用）
@@ -48,11 +48,11 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	local: {
 		playlist: [
 			{
-				name: "使一颗心免于哀伤",
-				artist: "知更鸟 / HOYO-MiX / Chevy",
-				url: "/assets/music/使一颗心免于哀伤-哼唱.mp3",
-				cover: "/assets/music/cover/109951169585655912.webp",
-				lrc: "",
+				name: "Home",
+				artist: "ThimLife; Bibiane Z; ",
+				url: "/assets/music/Home.mp3",
+				cover: "/assets/music/cover/cover.jpg",
+				lrc: "/assets/music/lrc/Home.lrc",
 			},
 		],
 	},
