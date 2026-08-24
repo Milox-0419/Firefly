@@ -81,7 +81,11 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		icon: "material-symbols:info",
 		children: [
 			// 打赏
-			LinkPresets.Sponsor,
+			{
+				...LinkPresets.Sponsor,
+				name: "支持",
+				icon: "material-symbols:favorite",
+			},
 
 			// 关于页面
 			LinkPresets.About,
