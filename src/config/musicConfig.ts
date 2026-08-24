@@ -26,7 +26,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 		// 默认使用官方 API，也可以使用自定义 API
 		api: "https://meting.elysium-stack.cn/api",
 		// 音乐平台：netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
-		server: "kuwo",
+		server: "netease",
 		// 类型：song=单曲, playlist=歌单, album=专辑, search=搜索, artist=艺术家
 		type: "playlist",
 		// 歌单/专辑/单曲 ID 或搜索关键词
