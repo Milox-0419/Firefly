@@ -1,0 +1,104 @@
+---
+// src/pages/posts/index.astro
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const allPosts = await getCollection('posts');
+
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.published.getTime() - a.data.published.getTime()
+);
+---
+
+<Layout title="文章列表 - Milox's Blog">
+  <div class="posts-list-container">
+    <h1 class="page-title">📚 所有文章</h1>
+
+    {sortedPosts.length === 0 ? (
+      <p class="empty-msg">还没有文章，快去写一篇吧！</p>
+    ) : (
+      <ul class="posts-list">
+        {sortedPosts.map((post) => (
+          <li class="post-item">
+            <a href={`/posts/${post.slug}/`} class="post-link">
+              <span class="post-title">{post.data.title}</span>
+              <span class="post-date">
+                {post.data.published?.toLocaleDateString('zh-CN')}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</Layout>
+
+<style>
+  .posts-list-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 16px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+
+  .posts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-item {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .post-item:last-child {
+    border-bottom: none;
+  }
+
+  .post-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .post-title {
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .post-title:hover {
+    color: var(--primary, #6c63ff);
+  }
+
+  .post-date {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.4);
+    white-space: nowrap;
+    margin-left: 16px;
+  }
+
+  .empty-msg {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  @media (max-width: 640px) {
+    .post-link {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .post-date {
+      margin-left: 0;
+      font-size: 12px;
+    }
+  }
+</style>

@@ -25,6 +25,13 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			// 归档
 			LinkPresets.Archive,
 
+			//文章列表
+			{
+              name: "文章列表",
+              url: "/posts/",
+              icon: "material-symbols:list",
+            },
+
 			// 分类
 			LinkPresets.Categories,
 
