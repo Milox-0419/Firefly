@@ -38,8 +38,15 @@ content:
             label: 标签
             type: select
             options:
-              multiple: true
-              creatable: true
+              - Firefly
+              - Markdown
+              - MDX
+              - Mermaid
+              - PlantUML
+              - 博客
+              - 文章示例
+            multiple: true
+            creatable: true
           - name: body
             label: 正文
             type: rich-text
