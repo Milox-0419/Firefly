@@ -5,49 +5,55 @@ media:
     output: ./images
     categories: [image]
 
-collections:
-  - name: posts
+content:
+  - name: blog-posts
     label: 📝 博客文章
-    type: collection
-    path: src/content/posts
-    format: yaml-frontmatter
-    filename:
-      template: "{year}-{month}-{day}-{primary}.md"
-      field: date
-    view:
-      primary: title
-      fields: [title, date, tags]
-      sort: ["date desc", "title asc"]
-    fields:
-      - name: title
-        label: 标题
-        type: string
-        required: true
-      - name: date
-        label: 发布时间
-        type: date
-        required: true
-        options:
-          time: false
-          format: yyyy-MM-dd
-      - name: tags
-        label: 标签
-        type: select
-        multiple: true
-        creatable: true
-        options:
-          - Firefly
-          - Markdown
-          - MDX
-          - 博客
-          - 成长
-          - AI渗透
-          - 网络安全
-          - 文章示例
-      - name: body
-        label: 正文
-        type: rich-text
-        required: true
+    type: group
+    items:
+      - name: posts
+        label: 📝 博客文章
+        type: collection
+        path: src/content/posts
+        format: yaml-frontmatter
+        filename:
+          template: "{year}-{month}-{day}-{primary}.md"
+          field: create
+        view:
+          primary: title
+          fields: [title, published, tags, category, draft, pinned]
+          sort: ["published desc", "title asc"]
+        fields:
+          - name: title
+            label: 标题
+            type: string
+            required: true
+          - name: published
+            label: 发布时间
+            type: date
+            required: true
+            options:
+              time: false
+              format: yyyy-MM-dd
+          - name: tags
+            label: 标签
+            type: select
+            multiple: true
+            creatable: true
+            options:
+              - Firefly
+              - Markdown
+              - MDX
+              - Mermaid
+              - PlantUML
+              - 博客
+              - 成长
+              - AI渗透
+              - 网络安全
+              - 文章示例
+          - name: body
+            label: 正文
+            type: rich-text
+            required: true
 
 settings:
   content:
