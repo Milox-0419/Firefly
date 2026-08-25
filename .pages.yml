@@ -37,6 +37,8 @@ content:
           - name: tags
             label: 标签
             type: select
+            multiple: true
+            creatable: true
             options:
               - Firefly
               - Markdown
@@ -44,9 +46,10 @@ content:
               - Mermaid
               - PlantUML
               - 博客
+              - 成长
+              - AI渗透
+              - 网络安全
               - 文章示例
-            multiple: true
-            creatable: true
           - name: body
             label: 正文
             type: rich-text
