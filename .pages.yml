@@ -97,11 +97,16 @@ content:
                 - { label: 演示, value: 演示 }
                 - { label: 示例, value: 示例 }
                 - { label: Markdown, value: Markdown }
+                - { label: MDX, value: MDX}
+                - { label: Mermaid, value: Mermaid}
+                - { label: PlantUML, value: PlantUML}
                 - { label: Firefly, value: Firefly }
+                - { label: 成长, value: 成长}
+                - { label: 网络安全, value: 网络安全}
+                - { label: AI渗透, value: AI渗透}
                 - { label: 博客, value: 博客 }
                 - { label: 主题, value: 主题 }
                 - { label: 教程, value: 教程 }
-                - { label: JavaScript, value: JavaScript }
                 - { label: Astro, value: Astro }
 
           - name: category
