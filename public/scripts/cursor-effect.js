@@ -150,7 +150,7 @@ function initCursor() {
   try {
     // 波纹：点击位置扩散的半透明圆圈 (使用 mouse-animations 库的 Ripple)
     // 动态导入避免在不支持的环境下报错
-    import("mouse-animations").then(({ Ripple }) => {
+    import("https://cdn.jsdelivr.net/npm/mouse-animations/+esm").then(({ Ripple }) => {
       rippleInstance = new Ripple({
         color: "rgba(167, 139, 250, 0.35)",
         duration: 600,
