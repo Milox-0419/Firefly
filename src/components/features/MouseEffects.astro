@@ -4,133 +4,8 @@
 //   透明度/尺寸逐级衰减，形成"从光标拖出一串圈"的效果（自定义实现，替代系统光标）
 // - Ripple：点击半透明波纹（mouse-animations 库）
 // 仅在精确指针设备（桌面端）启用，触屏/手机自动跳过；尊重"减弱动态效果"偏好
-// 效果绑定在 window/document 上，Swup 页面切换后持续生效，无需重新初始化
+// 脚本通过 public/scripts/cursor-effect.js 加载，支持 Swup 页面切换后重新初始化
 ---
-
-<script>
-	import { Ripple } from "mouse-animations";
-
-	// 拖尾圈光标：内圆点锁定指针位置，N 个外圈逐个追逐前一个圈（lerp 缓动），
-	// 全部用 transform 位移（GPU 合成，不触发重排）
-	function createTrailingCursor(): void {
-		const PURPLE_RGB = "167, 139, 250";
-		const DOT_SIZE = 10; // 内圆点直径 px
-		const RING_SIZE = 46; // 首个外圈直径 px
-		const RING_COUNT = 7; // 拖尾圈数量
-		const EASE = 0.33; // 追逐系数（越小尾巴越长越柔）
-
-		// 隐藏系统指针
-		const styleElement = document.createElement("style");
-		styleElement.textContent =
-			"body.__trailing-cursor, body.__trailing-cursor * { cursor: none !important; }";
-		document.head.appendChild(styleElement);
-		document.body.classList.add("__trailing-cursor");
-
-		// 创建圆形元素：固定定位，初始隐藏，收到首次 mousemove 才显示
-		const createElement = (size: number, css: string): HTMLDivElement => {
-			const el = document.createElement("div");
-			el.style.cssText = `position:fixed;top:0;left:0;width:${size}px;height:${size}px;border-radius:50%;pointer-events:none;z-index:1000000;visibility:hidden;will-change:transform;${css}`;
-			document.body.appendChild(el);
-			return el;
-		};
-
-		const dot = createElement(DOT_SIZE, `background:rgb(${PURPLE_RGB});`);
-
-		// 拖尾圈：越靠后透明度越低、尺寸越小
-		const rings = Array.from({ length: RING_COUNT }, (_, i) => {
-			const t = (i + 1) / (RING_COUNT + 1); // 0→1 衰减进度
-			const size = RING_SIZE * (1 - t * 0.25);
-			const alpha = (0.55 * (1 - t) + 0.08).toFixed(2);
-			return {
-				el: createElement(size, `border:2px solid rgba(${PURPLE_RGB},${alpha});`),
-				size,
-				x: 0,
-				y: 0,
-			};
-		});
-
-		let targetX = 0;
-		let targetY = 0;
-		let firstMove = false;
-
-		document.addEventListener("mousemove", (e) => {
-			targetX = e.clientX;
-			targetY = e.clientY;
-			if (!firstMove) {
-				firstMove = true;
-				// 首帧把所有圈放到指针处，避免从左上角"飞入"
-				for (const ring of rings) {
-					ring.x = targetX;
-					ring.y = targetY;
-				}
-				dot.style.visibility = "visible";
-				for (const ring of rings) ring.el.style.visibility = "visible";
-			}
-		});
-
-		// 居中位移：transform 由 GPU 合成，动画流畅
-		const moveTo = (el: HTMLElement, x: number, y: number, size: number): void => {
-			el.style.transform = `translate3d(${x - size / 2}px, ${y - size / 2}px, 0)`;
-		};
-
-		const loop = (): void => {
-			if (firstMove) {
-				moveTo(dot, targetX, targetY, DOT_SIZE);
-				let prevX = targetX;
-				let prevY = targetY;
-				// 每个圈追逐前一个圈的位置，形成链式拖尾
-				for (const ring of rings) {
-					ring.x += (prevX - ring.x) * EASE;
-					ring.y += (prevY - ring.y) * EASE;
-					moveTo(ring.el, ring.x, ring.y, ring.size);
-					prevX = ring.x;
-					prevY = ring.y;
-				}
-			}
-			requestAnimationFrame(loop);
-		};
-		requestAnimationFrame(loop);
-	}
-
-	function initMouseEffects(): void {
-		// 手机端/触屏（无精确指针）或用户偏好减弱动态效果时禁用
-		if (!window.matchMedia("(pointer: fine)").matches) return;
-		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-			return;
-		}
-
-		try {
-			// 波纹：点击位置扩散的半透明圆圈
-			// 样式依赖下方静态 <style>（见文件底部）：库初始化时注入 head 的
-			// 同款样式会被 Swup 的 head 重建丢弃，导致波纹元素样式丢失、
-			// 动画不触发、无法清理，在左上角堆叠成紫色色块
-			new Ripple({
-				color: "rgba(167, 139, 250, 0.35)",
-				duration: 600,
-				maxSize: 120,
-			});
-
-			// Swup 页面切换时清理残留波纹：动画未触发时 animationend 不会执行，
-			// 库不会移除元素，此处兜底清理，防止泄漏堆积
-			document.addEventListener("swup:content:replace", () => {
-				document
-					.querySelectorAll(".__ma-ripple-el")
-					.forEach((el) => el.remove());
-			});
-
-			// 拖尾圈光标（替代原 Trail + CustomCursor 组合）
-			createTrailingCursor();
-		} catch (error) {
-			console.error("[MouseEffects] init failed:", error);
-		}
-	}
-
-	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", initMouseEffects);
-	} else {
-		initMouseEffects();
-	}
-</script>
 
 <!-- 波纹样式静态副本：与库运行时注入 head 的规则完全一致。
      库注入的 <style> 会被 Swup 页面切换时的 head 重建丢弃，
@@ -153,3 +28,9 @@
 		animation: __ma-ripple-expand var(--_dur) ease-out forwards;
 	}
 </style>
+
+<script>
+	// 这个组件不再包含初始化逻辑，逻辑已移至 public/scripts/cursor-effect.js
+	// 在这里只需确保脚本被正确加载（通过 Layout.astro 中的 script 标签）
+	// 保留此文件是为了兼容现有的组件引用结构
+</script>
