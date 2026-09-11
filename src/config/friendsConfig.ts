@@ -55,7 +55,7 @@ export const friendsConfig: FriendLink[] = [
 		imgurl:"https://charlore.cn/images/charlore/profile-avatar.jpg",
 		desc:"We are all in the gutter, but some of us are looking at the stars.",
 		siteurl:"https://charlore.cn",
-		tags:["朋友"],
+		tags:["Blog"],
 		weight: 10,
 		enabled: true,
 
