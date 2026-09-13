@@ -878,7 +878,12 @@ const hasMultipleImages =
             {sidebarLayoutConfig.position !== "right" ? (
                 <>
                     {sidebarLayoutConfig.enable ? (
-                        <div id="left-sidebar-wrapper" class="contents" data-hide-sidebar-on-post={hideSidebarOnPostPage ? "true" : "false"} style="contain: layout style paint;">
+                        <div
+                            id="left-sidebar-wrapper"
+                            class="contents"
+                            data-hide-sidebar-on-post={hideSidebarOnPostPage ? "true" : "false"}
+                            style={isPostPage && hideSidebarOnPostPage ? "display: none; contain: layout style paint;" : "contain: layout style paint;"}
+                        >
                             {effectiveHasLeftComponents && (
                                 <SideBar
                                     side={effectiveIsBothSidebars ? "left" : undefined}
@@ -931,7 +936,12 @@ const hasMultipleImages =
             {(sidebarLayoutConfig.position === "both" || sidebarLayoutConfig.position === "right") ? (
                 <>
                     {sidebarLayoutConfig.enable ? (
-                        <div id="right-sidebar-static" class="contents" data-hide-sidebar-on-post={hideSidebarOnPostPage ? "true" : "false"}>
+                        <div
+                            id="right-sidebar-static"
+                            class="contents"
+                            data-hide-sidebar-on-post={hideSidebarOnPostPage ? "true" : "false"}
+                            style={isPostPage && hideSidebarOnPostPage ? "display: none;" : ""}
+                        >
                             {(effectiveIsBothSidebars || sidebarLayoutConfig.position === "right") && effectiveHasRightComponents && (
 								<SideBar side="right" class={rightSidebarClass} headings={headings} encrypted={encrypted}></SideBar>
                             )}
