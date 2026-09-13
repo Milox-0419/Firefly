@@ -35,9 +35,45 @@ comment: true
 
 *Example:*
 
-```
-$ pwd
-```
+`$ pwd`
 
 `/home/user`
+
+## `ls` ——列出文件
+
+`ls` 命令会显示当前目录中的文件和文件夹。
+
+*Example:*
+
+`$ls`
+
+`documents downloads projects` 
+
+## `ls -la` 详细信息和隐藏文件
+
+`ls`接受用于修改其行为的选项，最重要的是`-l`（长格式）和`-a`（显示隐藏文件）
+
+*Example1:*
+
+`$ ls -l`
+
+`total 3`
+
+`drwxr-xr-x 2 user user 4096 Mar 30 documents`
+
+`drwxr-xr-x 2 user user 4096 Mar 30 downloads`
+
+`drwxr-xr-x 2 user user 4096 Mar 30 projets`
+
+*Example2:*
+
+`$ ls -a`
+
+`.  ..  .bashrc  .profile  documents  downloads  projets`
+
+以 `` 开头的文件`.`会被隐藏。
+
+## 结构剖析
+
+选项用于修改命令的行为。选项有两种写法：简写形式——一个连字符加一个字母，例如“`-l`或`-a`”；以及长写形式——两个连字符加一个单词，例如`--all`“或” `--format=long`。许多工具都支持这两种写法`-a`，并且`--all`功能相同。长写形式更易读（在脚本中很有用），而简写形式输入速度更快。
 
