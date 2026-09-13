@@ -52,7 +52,7 @@ export const friendsConfig: FriendLink[] = [
 	},
 	{
 		title:"Charloré's Blog",
-		imgurl:"https://charlore.cn/images/charlore/profile-avatar.jpg",
+		imgurl:"https://charlore.cn/images/profile-avatar.jpg",
 		desc:"We are all in the gutter, but some of us are looking at the stars.",
 		siteurl:"https://charlore.cn",
 		tags:["Blog"],
