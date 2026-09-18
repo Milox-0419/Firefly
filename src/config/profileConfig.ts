@@ -34,15 +34,15 @@ export const profileConfig: ProfileConfig = {
 			showName: false,
 		},
 		{
-			name: "Email",
-			icon: "fa7-solid:envelope",
-			url: "mailto:18095425411@163.com",
-			showName: false,
-		},
-		{
 			name: "bilibili",
 			icon: "fa7-brands:bilibili",
 			url: "https://space.bilibili.com/3546871991634230",
+			showName: false,
+		},
+		{
+			name: "Email",
+			icon: "fa7-solid:envelope",
+			url: "mailto:18095425411@163.com",
 			showName: false,
 		},
 	],
