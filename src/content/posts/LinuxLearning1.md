@@ -103,7 +103,7 @@ $ ls -a
 .  ..  .bashrc  .profile  documents  downloads  projets
 ```
 
-以 `` 开头的文件`.`会被隐藏。
+以 ` ` 开头的文件`.`会被隐藏。
 
 ## 结构剖析
 
