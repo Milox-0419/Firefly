@@ -1632,6 +1632,7 @@ function disableAnimation() {
     const sidebarPosition = mainGrid.getAttribute("data-sidebar-position") || "left";
     const tabletSidebar = mainGrid.getAttribute("data-tablet-sidebar") || "left";
     const showBothSidebarsOnPostPage = mainGrid.getAttribute("data-show-both-sidebars-on-post") === "true";
+    const isArchivePage = /\/archive\/?$/.test(window.location.pathname);
 
     // 首页竖版卡片模式：侧边栏已隐藏，强制单列布局（子元素定位由 CSS 覆盖，
     // 不能调 applySingleColLayout，否则会清除 footer/内容区的列定位类导致离开首页后错位）
@@ -1642,7 +1643,7 @@ function disableAnimation() {
     }
 
     // 侧边栏禁用 或 文章详情页隐藏侧边栏时，保持单列布局
-    if (!sidebarEnabled || (isPostPage && sidebarHideOnPost)) {
+    if (!sidebarEnabled || (isPostPage && sidebarHideOnPost) || isArchivePage) {
       applySingleColLayout(mainGrid);
       return;
     }
@@ -1693,6 +1694,16 @@ function disableAnimation() {
   // 更新侧边栏组件的可见性
   function updateSidebarComponentsVisibility() {
     const isPostPage = isCurrentPagePost();
+    const isArchivePage = /\/archive\/?$/.test(window.location.pathname);
+
+    // 归档页不显示静态侧边栏，处理首页经 Swup 跳转后的残留状态
+    document.querySelectorAll<HTMLElement>("[data-hide-sidebar-on-archive]").forEach((wrapper) => {
+      if (isArchivePage) {
+        wrapper.style.setProperty("display", "none", "important");
+      } else {
+        wrapper.style.removeProperty("display");
+      }
+    });
 
     // 处理侧边栏级别的 hideSidebarOnPostPage 配置
     document.querySelectorAll<HTMLElement>("[data-hide-sidebar-on-post]").forEach((wrapper) => {

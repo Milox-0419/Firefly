@@ -136,6 +136,8 @@ const shouldRenderCategoryBar = !!siteConfig.categoryBar && !homePostListHidden;
 
 // 检查是否在文章详情页
 const isPostPage = !!postSlug;
+const isArchivePage = /\/archive\/?$/.test(Astro.url.pathname);
+const hideSidebarOnArchivePage = isArchivePage;
 
 // 随机选择副标题（当打字机关闭且为数组时）
 const getRandomSubtitle = () => {
@@ -255,7 +257,7 @@ const updatedGridConfig: ResponsiveSidebarConfig = {
 
 const { gridCols: baseGridCols } = generateGridClasses(updatedGridConfig);
 // 首页竖版卡片模式：侧边栏隐藏，网格改单列，卡片渲染在原文章列表位置
-const gridCols = homePostListHidden ? "grid-cols-1" : baseGridCols;
+const gridCols = homePostListHidden || hideSidebarOnArchivePage ? "grid-cols-1" : baseGridCols;
 const sidebarClass = generateSidebarClasses(updatedGridConfig);
 const rightSidebarClass =
 	effectiveIsBothSidebars || sidebarLayoutConfig.position === "right"
@@ -882,7 +884,8 @@ const hasMultipleImages =
                             id="left-sidebar-wrapper"
                             class="contents"
                             data-hide-sidebar-on-post={hideSidebarOnPostPage ? "true" : "false"}
-                            style={isPostPage && hideSidebarOnPostPage ? "display: none; contain: layout style paint;" : "contain: layout style paint;"}
+                            data-hide-sidebar-on-archive="true"
+                            style={(isPostPage && hideSidebarOnPostPage) || hideSidebarOnArchivePage ? "display: none; contain: layout style paint;" : "contain: layout style paint;"}
                         >
                             {effectiveHasLeftComponents && (
                                 <SideBar
@@ -940,7 +943,8 @@ const hasMultipleImages =
                             id="right-sidebar-static"
                             class="contents"
                             data-hide-sidebar-on-post={hideSidebarOnPostPage ? "true" : "false"}
-                            style={isPostPage && hideSidebarOnPostPage ? "display: none;" : ""}
+                            data-hide-sidebar-on-archive="true"
+                            style={(isPostPage && hideSidebarOnPostPage) || hideSidebarOnArchivePage ? "display: none;" : ""}
                         >
                             {(effectiveIsBothSidebars || sidebarLayoutConfig.position === "right") && effectiveHasRightComponents && (
 								<SideBar side="right" class={rightSidebarClass} headings={headings} encrypted={encrypted}></SideBar>

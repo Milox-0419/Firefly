@@ -247,13 +247,15 @@ const hasInitiallyVisibleTopComponents = topComponents.some(
 					)}
 				</>
 			)}
-		</div>
-		<!-- ===== 3D 音乐可视化入口卡片 ===== -->
+			<!-- ===== 3D 音乐可视化入口卡片 ===== -->
 <a
   href="https://music.milox.dpdns.org"
   target="_blank"
   style="
     display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     background: linear-gradient(135deg, #0a0a1a, #1a1a4e);
     border-radius: 16px;
     padding: 18px 20px;
@@ -277,5 +279,6 @@ const hasInitiallyVisibleTopComponents = topComponents.some(
     <span style="font-size: 20px; opacity: 0.5; margin-left: auto;">→</span>
   </div>
 </a>
+		</div>
 	)
 }
